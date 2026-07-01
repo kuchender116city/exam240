@@ -243,6 +243,12 @@
     .result-stamp{width:110px;height:110px}
   }
   /* ---------- read-all button on start ---------- */
+  .cat-select{
+    width:100%;font-family:inherit;font-weight:600;font-size:1rem;color:var(--ink);
+    padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fbfcfe;
+    min-height:48px;
+  }
+  .cat-select:focus{outline:2px solid var(--brand);border-color:var(--brand)}
   .read-btn{
     width:100%;margin-top:10px;padding:14px;border-radius:14px;
     border:1.5px solid var(--brand);background:#fff;color:var(--brand);
@@ -336,6 +342,11 @@
     </div>
     <div class="pad">
       <div class="opt-group">
+        <div class="opt-label">เลือกหมวดข้อสอบ</div>
+        <select id="sel-cat" class="cat-select"></select>
+      </div>
+
+      <div class="opt-group">
         <div class="opt-label">จำนวนข้อที่จะทำ</div>
         <div class="seg" id="seg-count">
           <button data-count="20">20 ข้อ</button>
@@ -418,6 +429,10 @@
       </div>
       <button id="r-print" title="พิมพ์">🖨 พิมพ์</button>
       <button id="r-back" title="กลับ">✕ ปิด</button>
+    </div>
+    <div class="read-pagebar">
+      <span class="pinfo">หมวด</span>
+      <select id="read-cat" style="max-width:100%"></select>
     </div>
     <div class="read-pagebar">
       <button id="rp-prev">‹ ก่อนหน้า</button>
@@ -1273,11 +1288,15 @@ const BANK = [
 
 ];
 
+/* ===== หมวดหมู่ข้อสอบ (ตามหัวข้อในคู่มือ) ===== */
+const CAT = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8];
+const CATS = [{"n": "บทบาท หน้าที่ ความรับผิดชอบ และบทลงโทษ"}, {"n": "ระบบรายงานผลการตรวจสภาพรถผ่านสารสนเทศ"}, {"n": "การตรวจสภาพรถ / ตรวจพินิจ (พ.ร.บ.รถยนต์)"}, {"n": "การใช้เครื่องมือตรวจวัด CO และ HC"}, {"n": "การตรวจวัดควันดำ"}, {"n": "โคมไฟ (ไฟส่องสว่าง)"}, {"n": "ห้ามล้อ (เบรก) และศูนย์ล้อ"}, {"n": "การตรวจวัดระดับเสียง"}, {"n": "ระบบก๊าซ (Gas)"}];
+
 /* ====================== ตรรกะแอป ====================== */
 const TLAB = ["ก","ข","ค","ง","จ"];
 const PASS = 0.6; // เกณฑ์ผ่าน 60%
 
-let cfg = { count:244, mode:"instant", shuffleQ:true, shuffleC:true };
+let cfg = { count:244, mode:"instant", shuffleQ:true, shuffleC:true, catId:-1 };
 let quiz = [];      // ชุดข้อสอบรอบนี้ (แต่ละข้อมี order ของตัวเลือก)
 let idx = 0, score = 0, answeredCount = 0;
 
@@ -1304,6 +1323,16 @@ $("seg-mode").addEventListener("click", e=>{
   b.classList.add("on"); cfg.mode = b.dataset.mode;
 });
 
+/* --- category dropdown --- */
+function catCount(id){ return CAT.reduce((n,c)=> n + (c===id?1:0), 0); }
+(function initCats(){
+  const sel = $("sel-cat"); if(!sel) return;
+  let html = '<option value="-1">ทุกหมวด (ทั้งหมด '+BANK.length+' ข้อ)</option>';
+  CATS.forEach((c,i)=>{ html += '<option value="'+i+'">'+(i+1)+'. '+c.n+' ('+catCount(i)+' ข้อ)</option>'; });
+  sel.innerHTML = html;
+  sel.addEventListener("change", e=>{ cfg.catId = +e.target.value; });
+})();
+
 $("btn-start").addEventListener("click", startQuiz);
 $("btn-again").addEventListener("click", startQuiz);
 $("btn-home").addEventListener("click", ()=>show("start"));
@@ -1319,8 +1348,10 @@ function startQuiz(){
   cfg.shuffleQ = $("sw-shuffle").checked;
   cfg.shuffleC = $("sw-shuffle-choices").checked;
 
-  let pool = cfg.shuffleQ ? shuffle(BANK) : BANK.slice();
-  pool = pool.slice(0, Math.min(cfg.count, BANK.length));
+  // กรองตามหมวดที่เลือก
+  let base = (cfg.catId===-1) ? BANK.slice() : BANK.filter((_,i)=> CAT[i]===cfg.catId);
+  let pool = cfg.shuffleQ ? shuffle(base) : base.slice();
+  pool = pool.slice(0, Math.min(cfg.count, base.length));
 
   quiz = pool.map(item=>{
     // สร้างลำดับการแสดงตัวเลือก
@@ -1492,19 +1523,30 @@ document.addEventListener("keydown", e=>{
 /* ============ READ ALL / ZOOM / PAGINATE / PRINT ============ */
 const THAI_LAB = ["ก","ข","ค","ง","จ","ฉ"];
 const READ_PER = 10;
-let rPage = 0, rZoom = 1;
-const rTotalPages = () => Math.ceil(BANK.length / READ_PER);
+let rPage = 0, rZoom = 1, rCat = -1;
+let rList = BANK.map((_,i)=>i);            // ดัชนีข้อที่กำลังอ่าน (ตามหมวด)
+const rTotalPages = () => Math.max(1, Math.ceil(rList.length / READ_PER));
+function rebuildList(){
+  rList = (rCat===-1) ? BANK.map((_,i)=>i) : BANK.map((_,i)=>i).filter(i=> CAT[i]===rCat);
+}
 
-function openRead(){ rPage = 0; applyZoom(); buildPageSelect(); renderReadPage(); show("read"); }
+function initReadCat(){
+  const sel = $("read-cat"); if(!sel || sel.dataset.done) return;
+  let html = '<option value="-1">ทุกหมวด (ทั้งหมด '+BANK.length+' ข้อ)</option>';
+  CATS.forEach((c,i)=>{ html += '<option value="'+i+'">'+(i+1)+'. '+c.n+' ('+catCount(i)+' ข้อ)</option>'; });
+  sel.innerHTML = html; sel.dataset.done="1";
+  sel.addEventListener("change", e=>{ rCat = +e.target.value; rPage=0; rebuildList(); buildPageSelect(); renderReadPage(); });
+}
+function openRead(){ rPage = 0; rCat = -1; initReadCat(); $("read-cat").value="-1"; rebuildList(); applyZoom(); buildPageSelect(); renderReadPage(); show("read"); }
 
 function buildPageSelect(){
   const sel = $("rp-select"); if(!sel) return;
   const tp = rTotalPages();
   sel.innerHTML = "";
   for(let i=0;i<tp;i++){
-    const a=i*READ_PER+1, b=Math.min((i+1)*READ_PER, BANK.length);
+    const a=i*READ_PER+1, b=Math.min((i+1)*READ_PER, rList.length);
     const o=document.createElement("option");
-    o.value=i; o.textContent=(i+1)+"  (ข้อ "+a+"–"+b+")";
+    o.value=i; o.textContent=(i+1)+"  (ลำดับ "+a+"–"+b+")";
     sel.appendChild(o);
   }
 }
@@ -1512,9 +1554,11 @@ function buildPageSelect(){
 function renderReadPage(){
   const tp = rTotalPages();
   rPage = Math.max(0, Math.min(rPage, tp-1));
-  const start = rPage*READ_PER, end = Math.min(start+READ_PER, BANK.length);
+  const start = rPage*READ_PER, end = Math.min(start+READ_PER, rList.length);
   let html = "";
-  for(let i=start;i<end;i++){
+  if(rList.length===0){ html='<div class="read-item">ไม่มีข้อในหมวดนี้</div>'; }
+  for(let k=start;k<end;k++){
+    const i = rList[k];
     const it = BANK[i];
     html += '<div class="read-item"><div class="read-q"><span class="rq-no">ข้อ '+(i+1)+'.</span>'+escapeHtml(it.q)+'</div>';
     it.c.forEach((c,ci)=>{
@@ -1544,9 +1588,13 @@ function applyZoom(){
 }
 
 function printAll(){
-  let html = '<h2>แนวข้อสอบช่างตรวจรถ ตรอ. — ครบ 240 ข้อ พร้อมเฉลย</h2>';
-  html += '<div class="psub">อ้างอิงคู่มือ E-Learning กรมการขนส่งทางบก · ใช้เพื่อทบทวนเท่านั้น</div>';
-  BANK.forEach((it,i)=>{
+  const idxs = rList;
+  const heading = (rCat===-1) ? "แนวข้อสอบช่างตรวจรถ ตรอ. — ครบ 240 ข้อ พร้อมเฉลย"
+                              : "แนวข้อสอบ ตรอ. — หมวด "+(rCat+1)+" "+CATS[rCat].n+" ("+idxs.length+" ข้อ)";
+  let html = '<h2>'+escapeHtml(heading)+'</h2>';
+  html += '<div class="psub">ใช้เพื่อทบทวนเท่านั้น</div>';
+  idxs.forEach(i=>{
+    const it = BANK[i];
     html += '<div class="pitem"><div class="pq">ข้อ '+(i+1)+'. '+escapeHtml(it.q)+'</div>';
     it.c.forEach((c,ci)=>{
       html += '<div class="pc'+(ci===it.a?' correct':'')+'">'+THAI_LAB[ci]+'. '+escapeHtml(c)+'</div>';
