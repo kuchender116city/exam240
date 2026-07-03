@@ -144,6 +144,9 @@
   .bar{height:100%;background:linear-gradient(90deg,var(--brand),#3f86e6);width:0;transition:width .35s ease}
 
   .q-num{font-size:.78rem;font-weight:700;letter-spacing:.1em;color:var(--brand);text-transform:uppercase}
+  .choice.selected{border-color:var(--brand);background:#eef4ff;box-shadow:0 0 0 2px rgba(31,95,191,.25)}
+  .choice.selected .lab{background:var(--brand);color:#fff}
+  .confirm-hint{margin-top:10px;font-size:.86rem;color:var(--muted);text-align:center;min-height:1.1em}
   .q-img{display:block;max-width:100%;height:auto;margin:12px 0 4px;border:1px solid var(--line);
     border-radius:12px;background:#fff;padding:6px}
   @media(min-width:640px){ .q-img{max-width:460px} }
@@ -332,6 +335,128 @@
     #printArea .pc.correct::after{content:" \2713";}
   }
 
+  /* ============ อ่านสรุปแนวข้อสอบ (summary) ============ */
+  #summary{--s:1}
+  .sm-nav{display:flex;gap:7px;flex-wrap:wrap;padding:14px 16px 2px}
+  .sm-nav a{text-decoration:none;font-size:.82rem;font-weight:700;color:var(--brand-dark);
+    background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:7px 12px;transition:.15s}
+  .sm-nav a:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
+  #sum-doc{font-size:calc(1rem*var(--s));padding:8px 16px 22px}
+  @media(min-width:768px){ #sum-doc{font-size:calc(1.05rem*var(--s))} }
+  .sm-sec{margin-bottom:24px;scroll-margin-top:8px}
+  .sm-sec-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .sm-sec-no{flex:none;width:2.4em;height:2.4em;border-radius:12px;display:grid;place-items:center;
+    background:var(--brand);color:#fff;font-weight:800;font-size:1.1em}
+  .sm-sec-title{font-weight:800;font-size:1.22em;line-height:1.25;color:var(--ink)}
+  .sm-sec-title small{display:block;font-weight:500;font-size:.66em;color:var(--muted)}
+  .sm-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px 15px 5px;margin-bottom:12px}
+  .sm-card h3{font-weight:800;font-size:1.02em;color:var(--brand-dark);margin-bottom:10px;
+    display:flex;align-items:center;gap:8px}
+  .sm-card h3::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--brand);flex:none}
+  ul.sm-pts{list-style:none;display:flex;flex-direction:column;gap:9px}
+  ul.sm-pts li{position:relative;padding-left:20px;line-height:1.55}
+  ul.sm-pts li::before{content:"\25B8";position:absolute;left:2px;color:var(--brand);font-weight:800}
+  .sm-k{font-weight:700;color:var(--ink)}
+  .sm-v{font-weight:800;color:var(--correct);white-space:nowrap}
+  .sm-vx{font-weight:800;color:var(--wrong)}
+  .sm-mem{background:var(--wrong-bg);border:1.5px dashed #f0b8b2;border-radius:14px;padding:11px 14px;margin:4px 0 12px}
+  .sm-mem .sm-mt{font-weight:800;color:var(--stamp);font-size:.95em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .sm-mem .sm-mt::before{content:"\2605"}
+  .sm-mem ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+  .sm-mem li{padding-left:16px;position:relative;font-weight:600}
+  .sm-mem li::before{content:"\2013";position:absolute;left:2px;color:var(--stamp)}
+  #sum-doc table{width:100%;border-collapse:collapse;margin:2px 0 12px;font-size:.94em;background:#fff}
+  #sum-doc caption{text-align:left;font-weight:800;color:var(--brand-dark);padding:4px 0 8px;font-size:1.0em}
+  #sum-doc th,#sum-doc td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+  #sum-doc thead th{background:#eef4ff;color:var(--brand-dark);font-weight:800;font-size:.92em}
+  #sum-doc tbody tr:nth-child(even){background:#f8fafc}
+  #sum-doc td .sm-hl{font-weight:800;color:var(--correct)}
+  .sm-note{font-size:.82em;color:var(--muted);line-height:1.55;margin:2px 2px 12px}
+  .sm-note b{color:var(--ink-soft)}
+  @media(max-width:380px){ .sm-card{padding:13px 12px 3px} #sum-doc th,#sum-doc td{padding:8px 7px} }
+  /* print summary only */
+  @media print{
+    body.print-summary .app{display:block!important}
+    body.print-summary #printArea{display:none!important}
+    body.print-summary #start,body.print-summary #quiz,body.print-summary #result,body.print-summary #read,body.print-summary footer{display:none!important}
+    body.print-summary #summary{display:block!important}
+    body.print-summary .read-toolbar,body.print-summary .sm-nav{display:none!important}
+    body.print-summary .sm-sec{break-inside:auto;page-break-inside:auto}
+    body.print-summary .sm-card,body.print-summary #sum-doc table,body.print-summary .sm-mem{break-inside:avoid;page-break-inside:avoid}
+    body.print-summary .sm-sec-no,body.print-summary #sum-doc thead th,body.print-summary .sm-mem{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+
+  /* ============ โหมดจัดเต็ม (FX) ============ */
+  #fx-layer{position:fixed;inset:0;pointer-events:none;z-index:9998;overflow:hidden}
+  .confetti{position:fixed;width:11px;height:14px;will-change:transform,opacity;border-radius:2px}
+  .emoji-drop{position:fixed;will-change:transform,opacity;font-size:28px;line-height:1}
+
+  #toast-layer{position:fixed;left:0;right:0;top:0;display:flex;flex-direction:column;align-items:center;
+    gap:8px;padding-top:14px;pointer-events:none;z-index:9999}
+  .toast{
+    pointer-events:none;max-width:90vw;font-weight:800;font-size:1.02rem;line-height:1.35;text-align:center;
+    padding:13px 18px;border-radius:16px;box-shadow:0 12px 34px rgba(0,0,0,.22);
+    transform:translateY(-24px) scale(.9);opacity:0;animation:toastIn .28s cubic-bezier(.2,1.4,.5,1) forwards;
+  }
+  .toast.cheer{background:linear-gradient(135deg,#13855a,#1fae74);color:#fff}
+  .toast.taunt{background:linear-gradient(135deg,#c0392b,#e05a48);color:#fff}
+  .toast.mega{background:linear-gradient(135deg,#b8791f,#e0a52e,#c0392b);color:#fff;font-size:1.18rem;
+    box-shadow:0 0 0 3px rgba(255,255,255,.5),0 16px 44px rgba(184,121,31,.5)}
+  .toast.out{animation:toastOut .3s ease forwards}
+  @keyframes toastIn{to{transform:translateY(0) scale(1);opacity:1}}
+  @keyframes toastOut{to{transform:translateY(-18px) scale(.92);opacity:0}}
+
+  /* streak chip */
+  .streak-chip{
+    display:none;align-items:center;gap:3px;font-weight:800;font-size:.9rem;color:#c0392b;
+    background:#fff2ee;border:1.5px solid #f4c3bd;padding:5px 11px;border-radius:99px;
+  }
+  .streak-chip.on{display:inline-flex}
+  .streak-chip.bump{animation:chipBump .4s cubic-bezier(.2,1.5,.4,1)}
+  @keyframes chipBump{0%{transform:scale(1)}40%{transform:scale(1.35) rotate(-4deg)}100%{transform:scale(1)}}
+  #streak-fire{filter:grayscale(.1)}
+
+  /* fx quick toggle */
+  .fx-toggle{
+    border:1.5px solid var(--line);background:#fff;border-radius:99px;width:40px;height:40px;
+    font-size:1.1rem;cursor:pointer;transition:.15s;line-height:1;flex:none;
+  }
+  .fx-toggle:hover{border-color:var(--brand)}
+  .fx-toggle.off{filter:grayscale(1);opacity:.55}
+
+  /* screen shake on wrong */
+  @keyframes shakeX{
+    0%,100%{transform:translateX(0)} 10%{transform:translateX(-9px) rotate(-.4deg)}
+    20%{transform:translateX(8px) rotate(.4deg)} 30%{transform:translateX(-7px)}
+    40%{transform:translateX(6px)} 50%{transform:translateX(-5px)} 60%{transform:translateX(4px)}
+    70%{transform:translateX(-3px)} 80%{transform:translateX(2px)} 90%{transform:translateX(-1px)}
+  }
+  .app.shake{animation:shakeX .5s cubic-bezier(.36,.07,.19,.97)}
+
+  /* wrong choice wobble */
+  @keyframes wobbleNo{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}}
+  .choice.fx-wrong{animation:wobbleNo .45s ease}
+
+  /* correct choice pop + glow ring */
+  @keyframes popOk{0%{transform:scale(1)}45%{transform:scale(1.045)}100%{transform:scale(1)}}
+  .choice.fx-correct{animation:popOk .45s cubic-bezier(.2,1.5,.4,1);
+    box-shadow:0 0 0 0 rgba(19,133,90,.55);position:relative}
+  .choice.fx-correct::after{content:"";position:absolute;inset:0;border-radius:inherit;
+    box-shadow:0 0 0 3px rgba(19,133,90,.5);animation:ringOk .7s ease-out forwards;pointer-events:none}
+  @keyframes ringOk{0%{box-shadow:0 0 0 0 rgba(19,133,90,.55)}100%{box-shadow:0 0 0 16px rgba(19,133,90,0)}}
+
+  /* result stamp slam (reuse on pass/fail) */
+  @keyframes stampSlam{0%{transform:scale(2.4) rotate(-18deg);opacity:0}
+    60%{transform:scale(.88) rotate(-12deg);opacity:1}80%{transform:scale(1.06) rotate(-12deg)}
+    100%{transform:scale(1) rotate(-12deg)}}
+  .result-stamp.slam{animation:stampSlam .55s cubic-bezier(.2,1.2,.3,1)}
+
+  @media(prefers-reduced-motion:reduce){
+    .confetti,.emoji-drop{display:none!important}
+    .app.shake,.choice.fx-wrong,.choice.fx-correct,.streak-chip.bump,.result-stamp.slam{animation:none!important}
+    .choice.fx-correct::after{display:none}
+  }
+
   @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -381,10 +506,19 @@
           <div class="t-txt">สลับตำแหน่งตัวเลือก<small>ก–จ สลับที่กันทุกข้อ</small></div>
           <span class="switch"><input type="checkbox" id="sw-shuffle-choices" checked><span class="slider"></span></span>
         </label>
+        <label class="toggle-row">
+          <div class="t-txt">โหมดจัดเต็ม 🎉<small>เอฟเฟกต์ถูก/ผิด + คำแซวกวน ๆ</small></div>
+          <span class="switch"><input type="checkbox" id="sw-fx" checked><span class="slider"></span></span>
+        </label>
+        <label class="toggle-row">
+          <div class="t-txt">เสียงประกอบ 🔊<small>เสียงตอบถูก/ผิด (ปิดได้)</small></div>
+          <span class="switch"><input type="checkbox" id="sw-sound" checked><span class="slider"></span></span>
+        </label>
       </div>
 
       <button class="start-btn" id="btn-start">เริ่มทำข้อสอบ</button>
       <button class="read-btn" id="btn-read">📖 อ่านแนวข้อสอบทั้งหมด</button>
+      <button class="read-btn" id="btn-summary">📝 อ่านสรุปแนวข้อสอบ</button>
     </div>
   </section>
 
@@ -392,7 +526,9 @@
   <section id="quiz" class="card hidden">
     <div class="topbar">
       <div class="qcount">ข้อ <span id="cur">1</span>/<span id="total">244</span></div>
+      <div class="streak-chip" id="streak-chip"><span id="streak-fire">🔥</span> <span id="streak-n">0</span></div>
       <div class="score-chip">✓ <span id="score">0</span> คะแนน</div>
+      <button class="fx-toggle" id="fx-toggle" title="เปิด/ปิดโหมดจัดเต็ม">🎉</button>
     </div>
     <div class="progress"><div class="bar" id="bar"></div></div>
     <div class="pad">
@@ -401,6 +537,7 @@
       <img class="q-img" id="qimg" alt="ภาพประกอบข้อสอบ" style="display:none">
       <div class="choices" id="choices"></div>
       <div class="feedback" id="feedback"></div>
+      <div class="confirm-hint" id="confirm-hint"></div>
       <div class="actions">
         <button class="btn btn-ghost" id="btn-quit">ออก</button>
         <button class="btn btn-primary" id="btn-next" disabled>ข้อถัดไป</button>
@@ -422,6 +559,360 @@
       </div>
       <div class="review-title">ทบทวนคำตอบ</div>
       <div id="review"></div>
+    </div>
+  </section>
+
+  <!-- ============ อ่านสรุปแนวข้อสอบ ============ -->
+  <section id="summary" class="card hidden">
+    <div class="read-toolbar">
+      <span class="rt-title">📝 อ่านสรุปแนวข้อสอบ</span>
+      <div class="zoom-wrap">
+        <button id="sm-zo" title="ย่อ">A−</button>
+        <span class="zlvl" id="sm-zl">100%</span>
+        <button id="sm-zi" title="ขยาย">A+</button>
+      </div>
+      <button id="sm-print" title="พิมพ์">🖨 พิมพ์</button>
+      <button id="sm-back" title="กลับ">✕ ปิด</button>
+    </div>
+    <nav class="sm-nav">
+    <a href="#s1">1 · บทบาท/บทลงโทษ</a>
+    <a href="#s2">2 · ระบบสารสนเทศ</a>
+    <a href="#s3">3 · ตรวจสภาพ/ตรวจพินิจ</a>
+    <a href="#s4">4 · CO/HC</a>
+    <a href="#s5">5 · ควันดำ</a>
+    <a href="#s6">6 · โคมไฟ</a>
+    <a href="#s7">7 · ห้ามล้อ/ศูนย์ล้อ</a>
+    <a href="#s8">8 · ระดับเสียง</a>
+    <a href="#s9">9 · ระบบก๊าซ</a>
+  </nav>
+    <div id="sum-doc">
+
+
+    <!-- ===== 1 ===== -->
+    <section class="sm-sec" id="s1">
+      <div class="sm-sec-head"><div class="sm-sec-no">1</div>
+        <div class="sm-sec-title">บทบาท หน้าที่ ความรับผิดชอบ และบทลงโทษ<small>ผู้ควบคุม · เจ้าหน้าที่ · ผู้ได้รับใบอนุญาต</small></div>
+      </div>
+
+      <div class="sm-card">
+        <h3>ใครทำหน้าที่อะไร</h3>
+        <ul class="sm-pts">
+          <li><span class="sm-k">ผู้ควบคุมการตรวจสภาพรถ</span> = ตรวจสอบ <span class="sm-v">และวินิจฉัยผล</span> (มีคำว่า “วินิจฉัย”)</li>
+          <li><span class="sm-k">เจ้าหน้าที่ตรวจสภาพรถ</span> = ตรวจสอบ และ <span class="sm-v">บันทึกข้อมูล</span> (ไม่มีคำว่า “วินิจฉัย”)</li>
+        </ul>
+        <div class="sm-mem">
+          <div class="sm-mt">เคล็ดจำ</div>
+          <ul>
+            <li>ผู้ควบคุม → มีคำว่า “วินิจฉัย”</li>
+            <li>เจ้าหน้าที่ → ไม่มี 2 คำนี้: “วินิจฉัย / บันทึกข้อมูล”</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sm-card">
+        <h3>ลำดับบทลงโทษ &amp; ระยะเวลาระงับ</h3>
+        <ul class="sm-pts">
+          <li>3 ระดับ: <span class="sm-k">ตักเตือน → ระงับการดำเนินการชั่วคราว → เพิกถอนใบอนุญาต</span></li>
+        </ul>
+        <table>
+          <caption>ระยะเวลาระงับการดำเนินการชั่วคราว</caption>
+          <thead><tr><th>ครั้งที่</th><th>ผลที่ได้รับ</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td><span class="sm-hl">7 วันทำการ</span></td></tr>
+            <tr><td>2</td><td><span class="sm-hl">15 วันทำการ</span></td></tr>
+            <tr><td>3</td><td><span class="sm-hl">30 วันทำการ</span></td></tr>
+            <tr><td>4</td><td><span class="sm-hl">เพิกถอนใบอนุญาต</span></td></tr>
+          </tbody>
+        </table>
+        <p class="sm-note"><b>ตัวอย่างระดับโทษ:</b> ตักเตือน = ไม่ดูแล/ปรับปรุงอาคารสถานที่ ลานจอด · ระงับชั่วคราว = เครื่องตรวจปรับเทียบไม่ได้/ชำรุดใช้งานไม่ได้, ไม่จัดผู้ควบคุม/เจ้าหน้าที่, ไม่ตรวจในพื้นที่ที่ได้รับอนุญาต · เพิกถอน = ทุจริต/ออกใบรับรองไม่ตรงความจริง หรือออกใบรับรองโดยไม่มีการตรวจจริง</p>
+      </div>
+    </section>
+
+    <!-- ===== 2 ===== -->
+    <section class="sm-sec" id="s2">
+      <div class="sm-sec-head"><div class="sm-sec-no">2</div>
+        <div class="sm-sec-title">ระบบรายงานผลการตรวจสภาพรถผ่านสารสนเทศ</div>
+      </div>
+      <div class="sm-card">
+        <h3>ค่ามาตรฐานอุปกรณ์</h3>
+        <ul class="sm-pts">
+          <li>ภาพถ่ายรถ (เห็นตัวรถ + เลขทะเบียน) ขนาด <span class="sm-v">50–100 KB</span></li>
+          <li>ความเร็วอินเทอร์เน็ตเชื่อมต่อกรมฯ <span class="sm-v">ไม่น้อยกว่า 6 Mbps</span></li>
+          <li>กล้องถ่ายภาพ ความละเอียด <span class="sm-v">ไม่น้อยกว่า 1 ล้านพิกเซล</span></li>
+          <li>พิกัดจาก “ดึงค่าที่ตั้ง” เป็น <span class="sm-v">ตัวเลขทศนิยม</span> (ละติจูด/ลองจิจูด)</li>
+        </ul>
+      </div>
+      <div class="sm-card">
+        <h3>อุปกรณ์ &amp; ระบบ</h3>
+        <ul class="sm-pts">
+          <li><span class="sm-vx">Hard Disk</span> = ไม่จัดเป็นอุปกรณ์ควบคุม กำกับ ดูแล ของ ตรอ.</li>
+          <li>อุปกรณ์ต่อเชื่อมสัญญาณ = คอมพิวเตอร์ + เครื่องพิมพ์ + กล้องถ่ายภาพรถ + router + CCTV</li>
+          <li>“ดึงค่าที่ตั้ง” อยู่ในหัวข้อ <span class="sm-k">รายละเอียดผู้ใช้งาน</span></li>
+          <li>ลงทะเบียนผู้ควบคุม/เจ้าหน้าที่ที่เว็บ <span class="sm-v">v5.inspection.in.th</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 3 ===== -->
+    <section class="sm-sec" id="s3">
+      <div class="sm-sec-head"><div class="sm-sec-no">3</div>
+        <div class="sm-sec-title">การตรวจสภาพรถ / ตรวจพินิจ<small>ตามพระราชบัญญัติรถยนต์</small></div>
+      </div>
+
+      <div class="sm-card">
+        <h3>ประเภทรถ &amp; เกณฑ์แบ่งกฎหมาย</h3>
+        <ul class="sm-pts">
+          <li>รถที่ตรวจที่ ตรอ. ได้ = <span class="sm-v">รย.1, รย.2, รย.3, รย.12</span></li>
+          <li>รถนั่งส่วนบุคคลเกิน 7 คน = รวมที่นั่งคนขับ <span class="sm-v">ไม่เกิน 12 ที่นั่ง</span></li>
+          <li>แบ่งเข้า พ.ร.บ.ขนส่งทางบก เมื่อ <span class="sm-k">น้ำหนักรถเปล่า &gt; 2,200 กก.</span></li>
+          <li>รถอยู่ใต้ พ.ร.บ.รถยนต์ เช่น รถพ่วง, รถแทรกเตอร์</li>
+        </ul>
+      </div>
+
+      <div class="sm-card">
+        <h3>ส่วนควบ &amp; ค่าที่ต้องจำ</h3>
+        <ul class="sm-pts">
+          <li>แตรสัญญาณ <span class="sm-v">90–115 dBA</span> วัดห่างหน้ารถ <span class="sm-v">2 เมตร</span></li>
+          <li>ไฟหยุด (เบรก): สีแดง แสงคงที่ ส่องด้านหลัง</li>
+          <li>ไฟเลี้ยว: สีอำพัน กะพริบ</li>
+          <li>การจัดวางที่นั่งแบบ “ก” = ตาม<span class="sm-k">ความกว้าง</span>ของตัวรถ</li>
+          <li>รถโดยสารมาตรฐาน <span class="sm-k">3(ก)</span> = ไม่มีแอร์ และไม่กำหนดติดตั้งเครื่องดับเพลิง</li>
+          <li>มาตรฐาน <span class="sm-k">1(ก)</span> ขนส่งส่วนบุคคล = ไม่กำหนดติดเครื่องบันทึกการเดินทาง</li>
+        </ul>
+      </div>
+
+      <table>
+        <caption>กำลังมอเตอร์ไฟฟ้าขั้นต่ำ (รถ EV)</caption>
+        <thead><tr><th>ประเภทรถ</th><th>กำลังมอเตอร์</th><th>ความเร็วสูงสุด</th></tr></thead>
+        <tbody>
+          <tr><td>รย.1 / รย.2 / รย.3</td><td><span class="sm-hl">ไม่น้อยกว่า 15 kW</span></td><td>≥ 45 กม./ชม.</td></tr>
+          <tr><td>รย.12</td><td><span class="sm-hl">ไม่น้อยกว่า 0.5 kW</span></td><td>≥ 45 กม./ชม.</td></tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>สัญลักษณ์ขนาด/สัดส่วนรถ (ขนส่งสัตว์และสิ่งของ)</caption>
+        <thead><tr><th>สัญลักษณ์</th><th>ความหมาย</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td>ความยาวสุด</td></tr>
+          <tr><td>B</td><td>ช่วงล้อ</td></tr>
+          <tr><td>C</td><td>ส่วนยื่นท้าย</td></tr>
+          <tr><td>D</td><td>ส่วนยื่นหน้า</td></tr>
+          <tr><td>F</td><td>ความกว้างภายนอก</td></tr>
+          <tr><td>H</td><td>ความสูงภายนอก (วัดแนวดิ่งจากพื้นถึงจุดสูงสุด)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sm-card">
+        <h3>อุปกรณ์เพิ่มเติม: ต้องแจ้ง vs ไม่ต้องแจ้งนายทะเบียน</h3>
+        <ul class="sm-pts">
+          <li><span class="sm-k">ต้องแจ้ง:</span> ติด/โครงหลังคา, โครงเหล็ก–ราวเหล็กด้านข้าง, เปลี่ยนสีรถ, สติกเกอร์ฝากระโปรง, เสริมแหนบ/ระบบรองรับน้ำหนัก, โหลดเตี้ย, ติดถัง LPG/CNG</li>
+          <li><span class="sm-k">ไม่ต้องแจ้ง:</span> โรลบาร์, แร็คหลังคาวางของ, อุปกรณ์ขนจักรยาน, เปลี่ยนเบาะ, ใส่เกจ/ชุดควบคุมเกียร์</li>
+          <li>ตรวจใหม่หลังไม่ผ่าน &amp; เกิน 15 วัน = ต้องตรวจ<span class="sm-k">ทุกรายการ</span>เหมือนตรวจใหม่</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 4 ===== -->
+    <section class="sm-sec" id="s4">
+      <div class="sm-sec-head"><div class="sm-sec-no">4</div>
+        <div class="sm-sec-title">การใช้เครื่องมือตรวจวัด CO และ HC</div>
+      </div>
+
+      <div class="sm-card">
+        <h3>หลักปฏิบัติ</h3>
+        <ul class="sm-pts">
+          <li>วัดขณะเครื่องยนต์ <span class="sm-k">รอบเดินเบา</span>, เกียร์ว่าง, อุณหภูมิใช้งานปกติ</li>
+          <li>วัด <span class="sm-v">2 ครั้ง ใช้ค่าเฉลี่ย</span> เป็นเกณฑ์</li>
+          <li>สอดหัววัด (Probe) ให้ลึกที่สุดตามคู่มือผู้ผลิต (กันอากาศภายนอกเจือจางไอเสีย)</li>
+        </ul>
+      </div>
+
+      <table>
+        <caption>เชื้อเพลิงพิเศษ (ค่าไม่เกิน)</caption>
+        <thead><tr><th>เชื้อเพลิง</th><th>CO</th><th>HC</th></tr></thead>
+        <tbody>
+          <tr><td>เบนซินสลับก๊าซ — ช่วงเบนซิน</td><td class="sm-hl">4.5%</td><td class="sm-hl">600 ppm</td></tr>
+          <tr><td>เบนซินสลับก๊าซ — ช่วงก๊าซ</td><td class="sm-hl">2.0%</td><td class="sm-hl">600 ppm</td></tr>
+          <tr><td>แก๊สโซฮอล์</td><td class="sm-hl">4.5%</td><td class="sm-hl">600 ppm</td></tr>
+          <tr><td>ก๊าซธรรมชาติ (NGV)</td><td class="sm-hl">2.0%</td><td class="sm-hl">600 ppm</td></tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>รถยนต์นั่ง ≤ 7 คน (เบนซิน) ตามวันจดทะเบียน</caption>
+        <thead><tr><th>ช่วงจดทะเบียน</th><th>CO</th><th>HC</th></tr></thead>
+        <tbody>
+          <tr><td>ก่อน 1 พ.ย. 2536</td><td class="sm-hl">4.5%</td><td class="sm-hl">600 ppm</td></tr>
+          <tr><td>ตั้งแต่ 1 พ.ย. 2536</td><td class="sm-hl">1.5%</td><td class="sm-hl">200 ppm</td></tr>
+          <tr><td>ตั้งแต่ 1 ม.ค. 2557 — รอบสูง (High Idle)</td><td class="sm-hl">0.2%</td><td class="sm-hl">100 ppm</td></tr>
+          <tr><td>ตั้งแต่ 1 ม.ค. 2557 — รอบต่ำ (Normal Idle)</td><td class="sm-hl">0.3%</td><td class="sm-hl">100 ppm</td></tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>รถจักรยานยนต์ ตามวันจดทะเบียน</caption>
+        <thead><tr><th>ช่วงจดทะเบียน</th><th>CO</th><th>HC</th></tr></thead>
+        <tbody>
+          <tr><td>ก่อน 1 ก.ค. 2549</td><td class="sm-hl">4.5%</td><td class="sm-hl">10,000 ppm</td></tr>
+          <tr><td>1 ก.ค. 2549 – 31 ธ.ค. 2552</td><td class="sm-hl">3.5%</td><td class="sm-hl">2,000 ppm</td></tr>
+          <tr><td>ตั้งแต่ 1 ม.ค. 2553</td><td class="sm-hl">2.5%</td><td class="sm-hl">1,000 ppm</td></tr>
+          <tr><td>ตั้งแต่ 1 ม.ค. 2565</td><td class="sm-hl">1.5%</td><td class="sm-hl">500 ppm</td></tr>
+        </tbody>
+      </table>
+      <p class="sm-note"><b>หมายเหตุตรวจทาน:</b> ในคู่มือมีบางข้อที่ระบุค่าเฉพาะปีต่างจากตารางนี้เล็กน้อย (เช่น รถยนต์ปี 2558 = CO 0.5%/HC 100, จยย. “ก่อน 1 ม.ค. 2557” = 4.5%/10,000) ผมยกตารางหลักที่สอดคล้องกันมาให้ก่อน — จุดที่ต่างควรเทียบกับเล่มจริงอีกครั้งก่อนใช้จริง</p>
+    </section>
+
+    <!-- ===== 5 ===== -->
+    <section class="sm-sec" id="s5">
+      <div class="sm-sec-head"><div class="sm-sec-no">5</div>
+        <div class="sm-sec-title">การตรวจวัดควันดำ</div>
+      </div>
+      <table>
+        <caption>เกณฑ์ควันดำ (ขณะไม่มีภาระ)</caption>
+        <thead><tr><th>ระบบวัด</th><th>ค่าไม่เกิน</th></tr></thead>
+        <tbody>
+          <tr><td>ระบบกระดาษกรอง</td><td class="sm-hl">50%</td></tr>
+          <tr><td>ระบบความทึบแสง</td><td class="sm-hl">30%</td></tr>
+        </tbody>
+      </table>
+      <div class="sm-card">
+        <h3>วิธี &amp; การตัดสินผล</h3>
+        <ul class="sm-pts">
+          <li>วัด 2 ครั้ง <span class="sm-v">ใช้ค่าสูงสุด</span> เป็นเกณฑ์</li>
+          <li>2 ครั้งต่างกัน <span class="sm-vx">เกินร้อยละ 5</span> → ใช้ผลไม่ได้ ต้องยกเลิกแล้ววัดใหม่ 2 ครั้ง (ต่างกัน 6% = ต้องตรวจใหม่)</li>
+          <li>หัววัดแบบ<span class="sm-k">ไหลผ่านบางส่วน</span> = สอดเข้าไปห่างผนังท่อ <span class="sm-v">0.5 ซม.</span></li>
+          <li>หัววัดแบบ<span class="sm-k">ไหลผ่านทั้งหมด</span> = ห่างปลายท่อ <span class="sm-v">ไม่เกิน 5 ซม.</span></li>
+          <li>หลายท่อ = วัดท่อที่มี<span class="sm-k">ควันดำมากที่สุด</span></li>
+          <li>ปิดแอร์, เกียร์ว่าง/N, เร่งสุดคันเร่ง; แบบทึบแสงเก็บค่าขณะเริ่มกดคันเร่ง</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 6 ===== -->
+    <section class="sm-sec" id="s6">
+      <div class="sm-sec-head"><div class="sm-sec-no">6</div>
+        <div class="sm-sec-title">โคมไฟ (ไฟส่องสว่าง)</div>
+      </div>
+      <table>
+        <caption>ความเข้มส่องสว่าง (แคนเดลลา, cd)</caption>
+        <thead><tr><th>โคมไฟ</th><th>เกณฑ์</th></tr></thead>
+        <tbody>
+          <tr><td>พุ่งต่ำ / ดวง</td><td><span class="sm-hl">ตั้งแต่ 6,400 cd</span></td></tr>
+          <tr><td>พุ่งไกล / ดวง</td><td><span class="sm-hl">ตั้งแต่ 12,000 cd</span></td></tr>
+          <tr><td>พุ่งไกล รวมทุกดวง</td><td><span class="sm-hl">ไม่เกิน 430,000 cd</span></td></tr>
+        </tbody>
+      </table>
+      <div class="sm-card">
+        <h3>ตำแหน่ง &amp; ทิศทางลำแสง</h3>
+        <ul class="sm-pts">
+          <li>รถสูงเกิน <span class="sm-v">250 ซม.</span> ต้องมีโคมไฟแสดงส่วนสูง/ประเภทรถ</li>
+          <li>ไฟพุ่งต่ำ สูงจากผิวทาง <span class="sm-v">40–135 ซม.</span></li>
+          <li>มุมกดไฟพุ่งต่ำ <span class="sm-v">0.29–2.29 องศา</span> (= ร้อยละ 0.5–4.0) และ<span class="sm-k">ไม่เบนขวา</span></li>
+          <li>ไฟพุ่งไกล: <span class="sm-k">ไม่เบนขวา</span> และ<span class="sm-k">ไม่สูงกว่า</span>แนวระนาบ</li>
+          <li>เครื่องทดสอบตั้งขนานด้านหน้ารถ และอยู่ระนาบเดียวกับพื้น</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 7 ===== -->
+    <section class="sm-sec" id="s7">
+      <div class="sm-sec-head"><div class="sm-sec-no">7</div>
+        <div class="sm-sec-title">ห้ามล้อ (เบรก) และศูนย์ล้อ</div>
+      </div>
+      <div class="sm-card">
+        <h3>เกณฑ์แรงห้ามล้อ</h3>
+        <ul class="sm-pts">
+          <li>เบรกเท้า (ล้อหลัก) รวมทุกล้อ <span class="sm-v">ไม่น้อยกว่า 50%</span> ของน้ำหนักรถ</li>
+          <li>ผลต่างซ้าย–ขวาในเพลาเดียวกัน <span class="sm-v">ไม่เกิน 25%</span> ของแรงสูงสุดในเพลานั้น</li>
+          <li>เบรกมือ (ขณะจอด) <span class="sm-v">ไม่น้อยกว่า 20%</span> ของน้ำหนักรถ</li>
+          <li>ขับผ่านเครื่องทดสอบด้วยความเร็ว <span class="sm-v">3–5 กม./ชม.</span></li>
+        </ul>
+        <div class="sm-mem">
+          <div class="sm-mt">เคล็ดจำ</div>
+          <ul>
+            <li>ล้อหลัก = <b>50</b></li>
+            <li>ผลต่าง = <b>25</b></li>
+            <li>ขณะจอด (เบรกมือ) = <b>20</b></li>
+          </ul>
+        </div>
+      </div>
+      <div class="sm-card">
+        <h3>ศูนย์ล้อ</h3>
+        <ul class="sm-pts">
+          <li>รถยนต์: ค่าเบี่ยงเบน <span class="sm-v">±5 เมตร/กิโลเมตร</span> (= 5 มม./เมตร)</li>
+          <li>จักรยานยนต์: แนวล้อหน้า–หลังเยื้อง/เบี่ยงเบน <span class="sm-v">ไม่เกิน 50 มม.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 8 ===== -->
+    <section class="sm-sec" id="s8">
+      <div class="sm-sec-head"><div class="sm-sec-no">8</div>
+        <div class="sm-sec-title">การตรวจวัดระดับเสียง</div>
+      </div>
+      <div class="sm-card">
+        <h3>ตั้งค่าเครื่องวัด — จำคู่ ถูก/ผิด</h3>
+        <ul class="sm-pts">
+          <li><span class="sm-v">ถูก:</span> วงจรถ่วง A · Fast · Acoustic Calibrator · ไมค์สูง ≥ 20 ซม. · ห่างผนัง ≤ 1.0 ม. · มุม 45° · ระยะวัด 0.5 ม. หรือ 7.5 ม.</li>
+          <li><span class="sm-vx">ผิด (อย่าหลง):</span> วงจร C · Slow · dB(B) · ห่างผนัง 0.5 ม. · สูง 45 ซม. · “3 ถึงไม่ถึง 5 ม.”</li>
+          <li>ที่ระยะ 7.5 ม. เครื่องวัดสูงจากพื้น <span class="sm-v">1.2 ม.</span></li>
+        </ul>
+      </div>
+      <div class="sm-card">
+        <h3>การตัดสิน &amp; รอบวัด</h3>
+        <ul class="sm-pts">
+          <li>วัด 2 ครั้ง ต่างกัน<span class="sm-k">ไม่เกิน 2 dBA ใช้ค่าสูงสุด</span>; เกิน 2 dBA = เริ่มวัดใหม่</li>
+          <li>จยย. 2 จังหวะ = <span class="sm-v">3,750 รอบ/นาที</span> · 4 จังหวะ = <span class="sm-v">3,000 รอบ/นาที</span></li>
+          <li>ปลายท่อไอเสีย: ออกท้ายด้านขวา/ด้านบน/แนวขนานด้านท้ายได้ (<span class="sm-vx">ห้ามออกท้ายด้านซ้าย</span>)</li>
+        </ul>
+      </div>
+      <table>
+        <caption>ระดับเสียงรถยนต์ (ไม่เกิน)</caption>
+        <thead><tr><th>เงื่อนไข</th><th>ค่า</th></tr></thead>
+        <tbody>
+          <tr><td>จดทะเบียนก่อน 1 ม.ค. 2557</td><td class="sm-hl">100 dBA</td></tr>
+          <tr><td>ตั้งแต่ 2557 · รถเปล่า ≤ 2,200 กก.</td><td class="sm-hl">95 dBA</td></tr>
+          <tr><td>ตั้งแต่ 2557 · รถเปล่า &gt; 2,200 กก.</td><td class="sm-hl">99 dBA</td></tr>
+        </tbody>
+      </table>
+      <div class="sm-card">
+        <h3>หลายท่อไอเสีย — วัดอย่างไร</h3>
+        <ul class="sm-pts">
+          <li>คนละหม้อพัก (ไม่ว่าห่างเท่าใด) = <span class="sm-k">วัดทุกท่อ</span></li>
+          <li>หม้อพักเดียวกัน ห่าง &gt; 0.3 ม. = <span class="sm-k">วัดทุกท่อ</span></li>
+          <li>หม้อพักเดียวกัน ห่าง ≤ 0.3 ม. = <span class="sm-k">วัดท่อนอกตัวถังมากสุด</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 9 ===== -->
+    <section class="sm-sec" id="s9">
+      <div class="sm-sec-head"><div class="sm-sec-no">9</div>
+        <div class="sm-sec-title">ระบบก๊าซ (Gas)</div>
+      </div>
+      <div class="sm-card">
+        <h3>พื้นฐาน &amp; อุปกรณ์นิรภัย</h3>
+        <ul class="sm-pts">
+          <li><span class="sm-k">CNG</span> = Compressed Natural Gas (ส่วนใหญ่เป็นมีเทน, สถานะก๊าซ)</li>
+          <li><span class="sm-k">excess flow valve</span> = กันกรณีท่อนำก๊าซ<span class="sm-v">แรงดันสูงขาด</span></li>
+          <li>ทดสอบรั่ว CNG = ใช้ <span class="sm-v">Gas detector</span> ก่อน</li>
+          <li>ลิ้นเปิด–ปิดอัตโนมัติ = ไม่มีไฟเลี้ยงต้อง <span class="sm-v">ปกติปิด</span></li>
+          <li><span class="sm-k">pressure relief device</span> = ระบายเมื่อถังร้อน/ดันเกินกำหนด</li>
+          <li>ห้ามติดถังก๊าซ<span class="sm-vx">บนหลังคา/เหนือห้องโดยสาร</span></li>
+        </ul>
+      </div>
+      <div class="sm-card">
+        <h3>ถัง · กฎกระทรวง · เครื่องหมาย</h3>
+        <ul class="sm-pts">
+          <li>ถัง LPG ครบ <span class="sm-v">10 ปี</span> (นับจากทดสอบครั้งแรก) ต้องทดสอบ แล้วทดสอบซ้ำ<span class="sm-v">ทุก 5 ปี</span></li>
+          <li>เปลี่ยนถัง = ต้องมีหนังสือรับรองการติดตั้ง + รายละเอียดส่วนควบแนบท้าย<span class="sm-k">ทุกรายการ</span></li>
+          <li>รับรองจากผู้ผลิต → ไปตรวจกับผู้ตรวจทั่วไปเมื่อครบ <span class="sm-v">5 ปี</span> หรือเมื่อเปลี่ยนส่วนควบ</li>
+          <li>กฎกระทรวง: รย.1 ใช้ <span class="sm-k">LPG พ.ศ.2551</span> · การขนส่ง (30-xxxx) ใช้ <span class="sm-k">CNG พ.ศ.2550</span></li>
+          <li>เครื่องหมาย CNG: รถยนต์ = ติด<span class="sm-k">ท้ายรถ</span> · รถบรรทุก = ติด<span class="sm-k">ข้างหัวเก๋ง 2 ด้าน</span></li>
+        </ul>
+      </div>
+    </section>
     </div>
   </section>
 
@@ -459,6 +950,8 @@
   <footer>แนวข้อสอบ ตรอ. · ครบ 240 ข้อ · จัดทำเพื่อการทบทวน</footer>
 </div>
 
+<div id="fx-layer" aria-hidden="true"></div>
+<div id="toast-layer" aria-hidden="true"></div>
 <div id="printArea"></div>
 
 <script>
@@ -1125,7 +1618,7 @@ const BANK = [
 "เสริมแหนบ",
 "ฝาปิดด้านท้ายติดตั้งเครื่องทุ่นแรง"]},
 
-{q:"รถยนต์ที่มีการติดตั้งอุปกรณ์เพิ่มเติมข้อใดที่เมื่อตรวจพบแล้ว สถานตรวจสภาพรถสามารถดำเนินการตรวจสภาพรถได้ โดยไม่ต้องให้เจ้าของรถไปแจ้งต่อนายทะเบียน (แร็คหลังคา)",a:0,c:[
+{q:"รถยนต์ที่มีการติดตั้งอุปกรณ์เพิ่มเติมข้อใดที่เมื่อตรวจพบแล้ว สถานตรวจสภาพรถสามารถดำเนินการตรวจสภาพรถได้ โดยไม่ต้องให้เจ้าของรถไปแจ้งต่อนายทะเบียน (ชุดที่ 2)",a:0,c:[
 "แร็คหลังคาสำหรับวางสิ่งของ",
 "สติ๊กเกอร์ฝากระโปรงหน้า",
 "หลังคา",
@@ -1168,18 +1661,18 @@ const BANK = [
 {q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.12 ข้อใดกล่าวไม่ถูกต้อง",a:0,c:["แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์ และโครงสร้างตัวรถหรือโครงคัสซี","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป","แผ่นป้ายทะเบียนรถ ไม่ชำรุด ลบเลือน แก้ไข ดัดแปลงหรือมีสิ่งปิดบัง จนไม่สามารถมองเห็นตัวอักษรและตัวเลขได้ครบถ้วน ชัดเจน","คันบังคับเลี้ยวหรือแกนบังคับเลี้ยวต้องไม่ชำรุด หลวมคลอน","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 0.5 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง"]},
 {q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.12 ข้อใดกล่าวไม่ถูกต้อง (ชุด ก)",a:4,c:["แนวล้อหน้าและล้อหลังที่ปรากฏบนพื้นราบต้องเยื้องหรือเบี่ยงเบนไม่เกิน 50 มิลลิเมตร","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป","แผ่นป้ายทะเบียนรถ ไม่ชำรุด ลบเลือน แก้ไข ดัดแปลง หรือมีสิ่งปิดบัง จนไม่สามารถมองเห็นตัวอักษรและตัวเลขได้ครบถ้วน ชัดเจน","คันบังคับเลี้ยวหรือแกนบังคับเลี้ยวต้องไม่ชำรุด หลวมคลอน","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 1.5 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง (ที่ถูกคือ 0.5)"]},
 {q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.12 ข้อใดกล่าวไม่ถูกต้อง (ชุด ข)",a:0,c:["แนวล้อหน้าและล้อหลังที่ปรากฏบนพื้นราบต้องเยื้องหรือเบี่ยงเบนไม่เกิน ±5 เมตร/กิโลเมตร","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป","ระบบส่งกำลังต้องทำงานได้ตามปกติและไม่มีน้ำมันรั่วซึม","คันบังคับเลี้ยวหรือแกนบังคับเลี้ยวต้องไม่ชำรุด หลวมคลอน","รถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 0.5 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง"]},
-{q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.12 ข้อใดกล่าวถูกต้อง (คันเร่ง)",a:3,c:["แท่นเครื่องและยางแท่นเครื่อง ต้องยึดติดแน่นกับเครื่องยนต์ และโครงสร้างตัวรถหรือโครงคัสซี","ระยะ Free play ของพวงมาลัย ต้องไม่เกิน 22.5 องศา","แนวล้อหน้าและล้อหลังที่ปรากฏบนพื้นราบ ต้องเยื้องหรือเบี่ยงเบนไม่เกิน 25 มิลลิเมตร","คันเร่ง ต้องสามารถเร่งเครื่องกำเนิดพลังงานและคืนสู่ตำแหน่งปกติได้สะดวก","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 1.5 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง"]},
+{q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.12 ข้อใดกล่าวถูกต้อง (ชุดที่ 2)",a:3,c:["แท่นเครื่องและยางแท่นเครื่อง ต้องยึดติดแน่นกับเครื่องยนต์ และโครงสร้างตัวรถหรือโครงคัสซี","ระยะ Free play ของพวงมาลัย ต้องไม่เกิน 22.5 องศา","แนวล้อหน้าและล้อหลังที่ปรากฏบนพื้นราบ ต้องเยื้องหรือเบี่ยงเบนไม่เกิน 25 มิลลิเมตร","คันเร่ง ต้องสามารถเร่งเครื่องกำเนิดพลังงานและคืนสู่ตำแหน่งปกติได้สะดวก","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 1.5 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง"]},
 {q:"การตรวจส่วนควบและเครื่องอุปกรณ์สำหรับรถ ข้อใดเป็นการวินิจฉัยที่ถูกต้อง (ชุด ก)",a:4,c:["รถกระบะบรรทุกไม่มีกันชนท้าย ไม่ผ่านการตรวจสภาพ","ตัวถังด้านข้างยื่นเกินขอบยางด้านนอกสุดของเพลาล้อท้ายได้ด้านละ 20 เซนติเมตร ผ่านการตรวจสภาพ","ศูนย์ล้อหน้าต้องมีค่าเบี่ยงเบน -5 เมตร/กิโลเมตร ไม่ผ่านการตรวจสภาพ","รถตู้ติดกันชนหน้าเป็นโลหะขนาดใหญ่ไม่มีส่วนแหลมคมและไม่ปิดบังป้ายทะเบียน แต่มองแล้วเกะกะสายตา ไม่ผ่านการตรวจสภาพ","ตรวจพบโคมไฟหยุดมีแสงสีแดงแต่ให้แสงไม่คงที่ ไม่ผ่านการตรวจสภาพ"]},
 {q:"การตรวจส่วนควบและเครื่องอุปกรณ์สำหรับรถ ข้อใดเป็นการวินิจฉัยที่ถูกต้อง (ชุด ข)",a:3,c:["รถกระบะบรรทุกไม่มีกันชนท้าย ไม่ผ่านการตรวจสภาพ","ตัวถังด้านข้างยื่นเกินขอบยางด้านนอกสุดของเพลาล้อท้ายได้ด้านละ 20 เซนติเมตร ผ่านการตรวจสภาพ","ศูนย์ล้อหน้าต้องมีค่าเบี่ยงเบน -5 เมตร/กิโลเมตร ไม่ผ่านการตรวจสภาพ","รถติดกันชนหน้าเป็นโลหะขนาดใหญ่ไม่มีส่วนแหลมคมและไม่ปิดบังป้ายทะเบียน แต่มองแล้วเกะกะสายตา ผ่านการตรวจสภาพ","ตรวจพบโคมไฟหยุดมีแสงสีแดงแต่ให้แสงไม่คงที่ ผ่านการตรวจสภาพ"]},
 {q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.1 ข้อใดกล่าวไม่ถูกต้อง",a:2,c:["กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 15 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง","พวงมาลัยและแกนพวงมาลัยต้องไม่ชำรุด หลวมคลอน","แนวล้อหน้าและล้อหลังที่ปรากฏบนพื้นราบต้องเยื้องหรือเบี่ยงเบนไม่เกิน 50 มิลลิเมตร","แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์และโครงสร้างตัวรถหรือโครงคัสซี","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป"]},
 {q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.1 ข้อใดกล่าวถูกต้อง (ชุด ก)",a:4,c:["คันบังคับเลี้ยวหรือแกนบังคับเลี้ยวต้องไม่ชำรุด หลวมคลอน","ราวยึดเหนี่ยว ยึดติดมั่นคงแข็งแรงกับตัวรถ","หน้าต่างและบานหน้าต่างต้องมีขนาดและจำนวนตามสมควร","ห้ามล้อฉุกเฉิน ต้องทำงานได้ทันทีเมื่อปลดสายลมเบรกออก","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป"]},
 {q:"การวินิจฉัยผลการตรวจสภาพรถ รย.1 ข้อใดกล่าวไม่ถูกต้อง",a:4,c:["แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์ และโครงสร้างตัวรถหรือโครงคัสซี ผ่านการตรวจสภาพ","พวงมาลัยและแกนพวงมาลัยต้องไม่ชำรุด หลวมคลอน ผ่านการตรวจสภาพ","แผ่นป้ายทะเบียนรถ ต้องไม่ชำรุด ลบเลือน แก้ไข ดัดแปลง หรือมีสิ่งปิดบังจนมองไม่เห็นตัวอักษรและตัวเลขครบถ้วน ผ่านการตรวจสภาพ","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป ผ่านการตรวจสภาพ","รถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 5 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง ผ่านการตรวจสภาพ"]},
 {q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.1 ข้อใดกล่าวไม่ถูกต้อง (ชุด ข)",a:2,c:["กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 15 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง","ศูนย์ล้อหน้าต้องมีค่าเบี่ยงเบนไม่เกิน ±5 เมตร/กิโลเมตร","คันบังคับเลี้ยวหรือแกนบังคับเลี้ยวต้องไม่ชำรุด หลวมคลอน","แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์และโครงสร้างตัวรถหรือโครงคัสซี","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป"]},
-{q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.2 ข้อใดกล่าวไม่ถูกต้อง (มอเตอร์ไฟฟ้า)",a:2,c:["แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์และโครงสร้างตัวรถหรือโครงคัสซี","แผ่นป้ายทะเบียนรถ ไม่ชำรุด ลบเลือน แก้ไข ดัดแปลง หรือมีสิ่งปิดบังจนมองไม่เห็นตัวอักษรและตัวเลขครบถ้วน","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 5 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง (ที่ถูกคือ 15 กิโลวัตต์)","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป","พวงมาลัยและแกนพวงมาลัยต้องไม่ชำรุด หลวมคลอน"]},
-{q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.2 ข้อใดกล่าวไม่ถูกต้อง (แนวล้อ)",a:0,c:["แนวล้อหน้าและล้อหลังที่ปรากฏบนพื้นราบต้องเยื้องหรือเบี่ยงเบนไม่เกิน 50 มิลลิเมตร","แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์ และโครงสร้างตัวรถหรือโครงคัสซี","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 15 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง","พวงมาลัยและแกนพวงมาลัยต้องไม่ชำรุด หลวมคลอน","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป"]},
-{q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.2 ข้อใดกล่าวไม่ถูกต้อง (คันบังคับเลี้ยว ก)",a:0,c:["คันบังคับเลี้ยวหรือแกนบังคับเลี้ยวต้องไม่ชำรุด หลวมคลอน","แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์ และโครงสร้างตัวรถหรือโครงคัสซี","ศูนย์ล้อหน้าต้องมีค่าเบี่ยงเบนไม่เกิน ±5 เมตร/กิโลเมตร","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 15 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง"]},
-{q:"การวินิจฉัยผลการตรวจสภาพรถ รย.2 ข้อใดกล่าวไม่ถูกต้อง (คันบังคับเลี้ยว ข)",a:1,c:["กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 15 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง ผ่านการตรวจสภาพ","คันบังคับเลี้ยวหรือแกนบังคับเลี้ยวต้องไม่ชำรุด หลวมคลอน ไม่ผ่านการตรวจสภาพ","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป ผ่านการตรวจสภาพ","แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์และโครงสร้างตัวรถหรือโครงคัสซี ผ่านการตรวจสภาพ","แผ่นป้ายทะเบียนรถ ชำรุด ลบเลือน แก้ไข ดัดแปลง หรือมีสิ่งปิดบังจนมองไม่เห็นตัวอักษรและตัวเลขครบถ้วน ไม่ผ่านการตรวจสภาพ"]},
-{q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.2 ข้อใดกล่าวไม่ถูกต้อง (คันบังคับเลี้ยว ค)",a:2,c:["แผ่นป้ายทะเบียนรถ ไม่ชำรุด ลบเลือน แก้ไข ดัดแปลงหรือมีสิ่งปิดบังจนมองไม่เห็นตัวอักษรและตัวเลขครบถ้วน","แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์ และโครงสร้างตัวรถหรือโครงคัสซี","คันบังคับเลี้ยวหรือแกนบังคับเลี้ยวต้องไม่ชำรุด หลวมคลอน","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 15 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยวเสียรูป"]},
+{q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.2 ข้อใดกล่าวไม่ถูกต้อง (ชุดที่ 3)",a:2,c:["แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์และโครงสร้างตัวรถหรือโครงคัสซี","แผ่นป้ายทะเบียนรถ ไม่ชำรุด ลบเลือน แก้ไข ดัดแปลง หรือมีสิ่งปิดบังจนมองไม่เห็นตัวอักษรและตัวเลขครบถ้วน","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 5 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง (ที่ถูกคือ 15 กิโลวัตต์)","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป","พวงมาลัยและแกนพวงมาลัยต้องไม่ชำรุด หลวมคลอน"]},
+{q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.2 ข้อใดกล่าวไม่ถูกต้อง (ชุดที่ 4)",a:0,c:["แนวล้อหน้าและล้อหลังที่ปรากฏบนพื้นราบต้องเยื้องหรือเบี่ยงเบนไม่เกิน 50 มิลลิเมตร","แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์ และโครงสร้างตัวรถหรือโครงคัสซี","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 15 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง","พวงมาลัยและแกนพวงมาลัยต้องไม่ชำรุด หลวมคลอน","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป"]},
+{q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.2 ข้อใดกล่าวไม่ถูกต้อง (ชุดที่ 5)",a:0,c:["คันบังคับเลี้ยวหรือแกนบังคับเลี้ยวต้องไม่ชำรุด หลวมคลอน","แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์ และโครงสร้างตัวรถหรือโครงคัสซี","ศูนย์ล้อหน้าต้องมีค่าเบี่ยงเบนไม่เกิน ±5 เมตร/กิโลเมตร","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 15 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง"]},
+{q:"การวินิจฉัยผลการตรวจสภาพรถ รย.2 ข้อใดกล่าวไม่ถูกต้อง (ชุดที่ 6)",a:1,c:["กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 15 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง ผ่านการตรวจสภาพ","คันบังคับเลี้ยวหรือแกนบังคับเลี้ยวต้องไม่ชำรุด หลวมคลอน ไม่ผ่านการตรวจสภาพ","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยว เสียรูป ผ่านการตรวจสภาพ","แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์และโครงสร้างตัวรถหรือโครงคัสซี ผ่านการตรวจสภาพ","แผ่นป้ายทะเบียนรถ ชำรุด ลบเลือน แก้ไข ดัดแปลง หรือมีสิ่งปิดบังจนมองไม่เห็นตัวอักษรและตัวเลขครบถ้วน ไม่ผ่านการตรวจสภาพ"]},
+{q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.2 ข้อใดกล่าวไม่ถูกต้อง (ชุดที่ 7)",a:2,c:["แผ่นป้ายทะเบียนรถ ไม่ชำรุด ลบเลือน แก้ไข ดัดแปลงหรือมีสิ่งปิดบังจนมองไม่เห็นตัวอักษรและตัวเลขครบถ้วน","แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์ และโครงสร้างตัวรถหรือโครงคัสซี","คันบังคับเลี้ยวหรือแกนบังคับเลี้ยวต้องไม่ชำรุด หลวมคลอน","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 15 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง","เครื่องผ่อนคลายความสั่นสะเทือน ต้องไม่รั่วซึมหรือบิดเบี้ยวเสียรูป"]},
 {q:"หลักเกณฑ์การวินิจฉัยผลการตรวจสภาพรถ รย.2 ข้อใดกล่าวถูกต้อง",a:3,c:["แนวล้อหน้าและล้อหลังที่ปรากฏบนพื้นราบต้องเยื้องหรือเบี่ยงเบนไม่เกิน 50 มิลลิเมตร","กรณีรถที่ใช้มอเตอร์ไฟฟ้า กำลังมอเตอร์ต้องไม่น้อยกว่า 1.5 กิโลวัตต์ และขับเคลื่อนรถให้มีความเร็วสูงสุดไม่น้อยกว่า 45 กิโลเมตรต่อชั่วโมง","หน้าต่างและบานหน้าต่างต้องมีขนาดและจำนวนตามสมควร","แท่นเครื่องและยางแท่นเครื่องต้องยึดติดแน่นกับเครื่องยนต์ และโครงสร้างตัวรถหรือโครงคัสซี","คันบังคับเลี้ยวหรือแกนบังคับเลี้ยวต้องไม่ชำรุด หลวมคลอน"]},
 {q:"ข้อใดไม่จัดเป็นเครื่องอุปกรณ์ส่วนควบของรถ รย.2 ที่จำเป็นต้องมี",a:4,c:["ที่ปัดน้ำฝน","กระจกมองหลัง","เครื่องวัดความเร็ว","เข็มขัดนิรภัย","ไฟตัดหมอก"]},
 {q:"รถที่จดตามพระราชบัญญัติการขนส่งทางบกใช้เชื้อเพลิงน้ำมันเบนซินสลับกับก๊าซ การวัดค่า CO และ HC ปฏิบัติอย่างไร",a:0,c:["วัดทั้งสองชนิด เบนซินค่า CO ไม่เกิน 4.5% HC ไม่เกิน 600 PPM ก๊าซ CO ไม่เกิน 2.0% HC ไม่เกิน 600 PPM","วัดเฉพาะที่ใช้เบนซิน ค่า CO ไม่เกิน 1.5% HC ไม่เกิน 200 PPM","วัดทั้งสองชนิด เบนซินค่า CO ไม่เกิน 2.0% HC ไม่เกิน 600 PPM ก๊าซ CO ไม่เกิน 4.5% HC ไม่เกิน 600 PPM","วัดเฉพาะที่ใช้ก๊าซ ค่า CO ไม่เกิน 2.0% HC ไม่เกิน 600 PPM","วัดเฉพาะที่ใช้เบนซิน ค่า CO ไม่เกิน 4.5% HC ไม่เกิน 600 PPM"]},
@@ -1211,8 +1704,8 @@ const BANK = [
 {q:"ถ้าค่าควันดำที่ตรวจวัดได้ทั้งสองครั้งแตกต่างกันเกินกว่าที่กฎหมายกำหนด มีวิธีปฏิบัติอย่างไร",a:4,c:["ตรวจวัดใหม่เพิ่มอีก 1 ครั้ง เทียบกับค่าครั้งที่ 1","ตรวจวัดใหม่เพิ่มอีก 1 ครั้ง เทียบกับค่าการวัดครั้งใดก็ได้ ที่ต่างกันไม่เกินร้อยละ 5","ตรวจวัดใหม่เพิ่มอีก 1 ครั้ง เทียบกับค่าครั้งที่ 2","สรุปผลว่าไม่ผ่านการตรวจสภาพ การวัดควันดำ","ยกเลิกการตรวจวัด และให้ทำการตรวจวัดใหม่ 2 ครั้ง"]},
 {q:"การเตรียมรถยนต์ก่อนการตรวจวัดควันดำ ข้อใดกล่าวไม่ถูกต้อง (ชุด ก)",a:3,c:["จอดรถยนต์ให้อยู่ในตำแหน่งเกียร์ว่าง","ปิดระบบปรับอากาศของรถยนต์ ก่อนตรวจวัด","ตรวจสอบท่อไอเสียรถยนต์ต้องไม่มีการชำรุด","กรณีมีท่อไอเสีย 2 ท่อ ให้วัดท่อใดท่อหนึ่งเท่านั้น","เดินเครื่องยนต์ให้อยู่ในอุณหภูมิใช้งานปกติ"]},
 {q:"การเตรียมรถยนต์ก่อนการตรวจวัดควันดำ ข้อใดกล่าวไม่ถูกต้อง (ชุด ข)",a:1,c:["จอดรถยนต์ให้อยู่ในตำแหน่งเกียร์ว่าง","เปิดระบบปรับอากาศของรถยนต์ ก่อนตรวจวัด","ตรวจสอบท่อไอเสียรถยนต์ต้องไม่รั่ว","ให้เร่งเครื่องยนต์เพื่อไล่เขม่าที่ตกค้างก่อนตรวจวัด","เดินเครื่องยนต์ให้อยู่ในอุณหภูมิใช้งานปกติ"]},
-{q:"วิธีการตรวจวัดควันดำ แบบวัดความทึบแสง ข้อใดกล่าวไม่ถูกต้อง (เปิดแอร์)",a:1,c:["ก่อนตรวจวัด เดินเครื่องยนต์ให้อยู่ในอุณหภูมิใช้งานปกติ","เปิดระบบปรับอากาศของรถยนต์ ก่อนตรวจวัด","ตรวจสอบรอบเดินเบาของรถ และจอดรถอยู่ในตำแหน่งเกียร์ N","ตรวจวัด 2 ครั้ง ใช้ค่าสูงกว่าเป็นเกณฑ์","เร่งเครื่องยนต์อย่างรวดเร็วจนสุดคันเร่ง พร้อมตรวจวัดควันดำ"]},
-{q:"วิธีการตรวจวัดควันดำ แบบวัดความทึบแสง ข้อใดกล่าวไม่ถูกต้อง (เร่งช้าๆ)",a:3,c:["ปิดระบบปรับอากาศของรถยนต์ ก่อนตรวจวัด","ก่อนตรวจวัด เดินเครื่องยนต์ให้อยู่ในอุณหภูมิใช้งานปกติ","ตรวจวัด 2 ครั้ง ต้องต่างกันไม่เกินร้อยละ 5 ใช้ค่าสูงสุดเป็นเกณฑ์","ให้เร่งเครื่องยนต์อย่างช้าๆ จนสุดคันเร่ง คงไว้ไม่น้อยกว่า 2 วินาที พร้อมตรวจวัดควันดำ","ตรวจสอบรอบเดินเบาของรถ และจอดรถอยู่ในตำแหน่งเกียร์ว่าง"]},
+{q:"วิธีการตรวจวัดควันดำ แบบวัดความทึบแสง ข้อใดกล่าวไม่ถูกต้อง (ชุดที่ 3)",a:1,c:["ก่อนตรวจวัด เดินเครื่องยนต์ให้อยู่ในอุณหภูมิใช้งานปกติ","เปิดระบบปรับอากาศของรถยนต์ ก่อนตรวจวัด","ตรวจสอบรอบเดินเบาของรถ และจอดรถอยู่ในตำแหน่งเกียร์ N","ตรวจวัด 2 ครั้ง ใช้ค่าสูงกว่าเป็นเกณฑ์","เร่งเครื่องยนต์อย่างรวดเร็วจนสุดคันเร่ง พร้อมตรวจวัดควันดำ"]},
+{q:"วิธีการตรวจวัดควันดำ แบบวัดความทึบแสง ข้อใดกล่าวไม่ถูกต้อง (ชุดที่ 4)",a:3,c:["ปิดระบบปรับอากาศของรถยนต์ ก่อนตรวจวัด","ก่อนตรวจวัด เดินเครื่องยนต์ให้อยู่ในอุณหภูมิใช้งานปกติ","ตรวจวัด 2 ครั้ง ต้องต่างกันไม่เกินร้อยละ 5 ใช้ค่าสูงสุดเป็นเกณฑ์","ให้เร่งเครื่องยนต์อย่างช้าๆ จนสุดคันเร่ง คงไว้ไม่น้อยกว่า 2 วินาที พร้อมตรวจวัดควันดำ","ตรวจสอบรอบเดินเบาของรถ และจอดรถอยู่ในตำแหน่งเกียร์ว่าง"]},
 {q:"วิธีการตรวจวัดควันดำ แบบกระดาษกรอง ข้อใดกล่าวไม่ถูกต้อง",a:1,c:["ตรวจสอบรอบเดินเบาของรถ และจอดรถอยู่ในตำแหน่งเกียร์ N","ตรวจวัด 2 ครั้ง ใช้ค่าเฉลี่ยเป็นเกณฑ์","ปิดระบบปรับอากาศของรถยนต์ ก่อนตรวจวัด","ก่อนตรวจวัด เดินเครื่องยนต์ให้อยู่ในอุณหภูมิใช้งานปกติ","ให้เร่งเครื่องยนต์อย่างรวดเร็วจนสุดคันเร่ง พร้อมเก็บตัวอย่างควันดำ ขณะเริ่มกดคันเร่ง"]},
 {q:"การเร่งเครื่องยนต์เพื่อตรวจวัดควันดำ แบบวัดความทึบแสง ควรปฏิบัติอย่างไร",a:4,c:["เร่งเครื่องยนต์ช้าๆ จนสุดคันเร่ง แล้วทำการตรวจวัดควันดำ","เร่งเครื่องยนต์อย่างรวดเร็วจนความเร็วรอบเป็นครึ่งหนึ่งของรอบสูงสุด พร้อมตรวจวัดควันดำ","เร่งเครื่องยนต์อย่างรวดเร็วจนความเร็วรอบเป็นหนึ่งในสี่ของรอบสูงสุด พร้อมตรวจวัดควันดำ","เร่งเครื่องยนต์อย่างรวดเร็วจนความเร็วรอบเป็นความเร็วที่ให้กำลังม้าสูงสุด พร้อมตรวจวัดควันดำ","เร่งเครื่องยนต์อย่างรวดเร็วจนสุดคันเร่ง พร้อมตรวจวัดควันดำ"]},
 {q:"การเร่งเครื่องยนต์และเก็บตัวอย่างควันดำ (แบบกระดาษกรอง) ควรปฏิบัติอย่างไร",a:4,c:["ให้เร่งเครื่องยนต์จนความเร็วรอบเป็นครึ่งหนึ่งของรอบสูงสุด พร้อมเก็บตัวอย่างควันดำ","ให้เร่งเครื่องยนต์อย่างรวดเร็วจนสุดคันเร่ง พร้อมเก็บตัวอย่างควันดำ หลังสิ้นสุดการเร่งเครื่อง","ให้เร่งเครื่องยนต์อย่างช้าๆ จนสุดคันเร่ง พร้อมเก็บตัวอย่างควันดำ ขณะเริ่มกดคันเร่ง","ให้เร่งเครื่องยนต์อย่างช้าๆ จนสุดคันเร่ง พร้อมเก็บตัวอย่างควันดำ หลังสิ้นสุดการเร่งเครื่อง","ให้เร่งเครื่องยนต์อย่างรวดเร็วจนสุดคันเร่ง พร้อมเก็บตัวอย่างควันดำ ขณะเริ่มกดคันเร่ง"]},
@@ -1236,8 +1729,8 @@ const BANK = [
 {q:"ทิศทางการเบี่ยงเบนของลำแสงโคมไฟแสงพุ่งไกล มีเกณฑ์กำหนดอย่างไร",a:1,c:["เทียบเส้นทึบแนวตั้งต้องไม่เบนซ้าย และเทียบเส้นทึบแนวระนาบต้องสูงเกินกว่าแนวระนาบ","เทียบเส้นทึบแนวตั้งต้องไม่เบนขวา และเทียบเส้นทึบแนวระนาบต้องไม่สูงเกินกว่าแนวระนาบ","เทียบเส้นทึบแนวตั้งต้องไม่เบนซ้าย และเทียบเส้นทึบแนวระนาบต้องมีระดับเดียวกับแนวระนาบ","เทียบเส้นทึบแนวตั้งต้องไม่เบนขวา และเทียบเส้นทึบแนวระนาบต้องสูงเกินกว่าแนวระนาบ","เทียบเส้นทึบแนวตั้งต้องไม่เบนซ้าย และเทียบเส้นทึบแนวระนาบต้องไม่สูงเกินกว่าแนวระนาบ"]},
 {q:"ทิศทางการเบี่ยงเบนของลำแสงโคมไฟแสงพุ่งต่ำ มีเกณฑ์กำหนดอย่างไร (มุมกดร้อยละ)",a:0,c:["เทียบเส้นทึบแนวตั้งต้องไม่เบนขวา และเทียบเส้นทึบแนวระนาบมีมุมกดระหว่างร้อยละ 0.5 - 4.0","เทียบเส้นทึบแนวตั้งต้องไม่เบนขวา และเทียบเส้นทึบแนวระนาบมีมุมกดระหว่างร้อยละ 0.29 - 2.29","เทียบเส้นทึบแนวตั้งต้องไม่เบนซ้าย และเทียบเส้นทึบแนวระนาบมีมุมกดระหว่างร้อยละ 0.29 - 2.29","เทียบเส้นทึบแนวตั้งต้องไม่เบนขวา และเทียบเส้นทึบแนวระนาบมีมุมกดระหว่างร้อยละ 4.0 - 5.0","เทียบเส้นทึบแนวตั้งต้องไม่เบนซ้าย และเทียบเส้นทึบแนวระนาบมีมุมกดระหว่างร้อยละ 0.5 - 4.0"]},
 {q:"ทิศทางการเบี่ยงเบนของลำแสงโคมไฟแสงพุ่งต่ำ มีเกณฑ์กำหนดอย่างไร (มุมกดองศา)",a:0,c:["เทียบเส้นทึบแนวตั้งต้องไม่เบนขวา และเทียบเส้นทึบแนวระนาบมีมุมกดระหว่าง 0.29 - 2.29 องศา","เทียบเส้นทึบแนวตั้งต้องไม่เบนขวา และเทียบเส้นทึบแนวระนาบมีมุมกดระหว่าง 0.5 - 2.29 องศา","เทียบเส้นทึบแนวตั้งต้องไม่เบนซ้าย และเทียบเส้นทึบแนวระนาบมีมุมกดระหว่าง 0.29 - 0.5 องศา","เทียบเส้นทึบแนวตั้งต้องไม่เบนซ้าย และเทียบเส้นทึบแนวระนาบมีมุมกดระหว่าง 0.29 - 2.9 องศา","เทียบเส้นทึบแนวตั้งต้องไม่เบนขวา และเทียบเส้นทึบแนวระนาบมีมุมกดระหว่าง 0.5 - 4.0 องศา"]},
-{q:"หน่วยเรียกมุมกดของลำแสงในโคมไฟแสงพุ่งต่ำ และมีเกณฑ์กำหนดอย่างไร (องศา)",a:2,c:["มากกว่า 0.29 องศา แต่ไม่เกิน 0.5 องศา","มากกว่า 0.5 องศา แต่ไม่เกิน 4 องศา","มากกว่า 0.29 องศา แต่ไม่เกิน 2.29 องศา","มากกว่า 0.5 องศา แต่ไม่เกิน 2.29 องศา","มากกว่า 0.29 องศา แต่ไม่เกิน 4 องศา"]},
-{q:"หน่วยเรียกมุมกดของลำแสงในโคมไฟแสงพุ่งต่ำ และมีเกณฑ์กำหนดอย่างไร (ร้อยละ)",a:3,c:["มากกว่า 0.5 องศา แต่ไม่เกิน 2.29 องศา","มากกว่า 0.29 องศา แต่ไม่เกิน 0.5 องศา","มากกว่า 0.5 องศา แต่ไม่เกิน 4 องศา","มากกว่าร้อยละ 0.5 แต่ไม่เกินร้อยละ 4","มากกว่าร้อยละ 2.29 แต่ไม่เกินร้อยละ 4"]},
+{q:"หน่วยเรียกมุมกดของลำแสงในโคมไฟแสงพุ่งต่ำ และมีเกณฑ์กำหนดอย่างไร (หน่วยที่ 1)",a:2,c:["มากกว่า 0.29 องศา แต่ไม่เกิน 0.5 องศา","มากกว่า 0.5 องศา แต่ไม่เกิน 4 องศา","มากกว่า 0.29 องศา แต่ไม่เกิน 2.29 องศา","มากกว่า 0.5 องศา แต่ไม่เกิน 2.29 องศา","มากกว่า 0.29 องศา แต่ไม่เกิน 4 องศา"]},
+{q:"หน่วยเรียกมุมกดของลำแสงในโคมไฟแสงพุ่งต่ำ และมีเกณฑ์กำหนดอย่างไร (หน่วยที่ 2)",a:3,c:["มากกว่า 0.5 องศา แต่ไม่เกิน 2.29 องศา","มากกว่า 0.29 องศา แต่ไม่เกิน 0.5 องศา","มากกว่า 0.5 องศา แต่ไม่เกิน 4 องศา","มากกว่าร้อยละ 0.5 แต่ไม่เกินร้อยละ 4","มากกว่าร้อยละ 2.29 แต่ไม่เกินร้อยละ 4"]},
 {q:"ทิศทางการเบี่ยงเบนของลำแสงโคมไฟแสงพุ่งต่ำ มีเกณฑ์กำหนดอย่างไร (สรุป)",a:4,c:["มุมกดจากแนวระนาบ ระหว่างร้อยละ 0.29 - 2.29 และไม่เบี่ยงเบนไปทางด้านซ้าย","มุมกดจากแนวระนาบ ระหว่างร้อยละ 0.29 - 2.29 และไม่เบี่ยงเบนไปทางด้านขวา","มุมกดจากแนวระนาบ ระหว่างร้อยละ 0.5 - 4.0 และไม่เบี่ยงเบนไปทางด้านซ้าย","มุมกดจากแนวระนาบ ระหว่างร้อยละ 4.0 - 5.0 และไม่เบี่ยงเบนไปทางด้านขวา","มุมกดจากแนวระนาบ ระหว่างร้อยละ 0.5 - 4.0 และไม่เบี่ยงเบนไปทางด้านขวา"]},
 {q:"จากรูปการเบี่ยงเบนลำแสงจากโคมไฟแสงพุ่งต่ำของรถ มีหลักเกณฑ์อย่างไรจึงผ่านการตรวจสภาพ",a:1,c:["ลำแสงพุ่งต่ำต้องไม่เบนซ้าย และมีมุมกดระหว่างร้อยละ 0.4-5.0","ลำแสงพุ่งต่ำต้องไม่เบนขวา และมีมุมกดระหว่างร้อยละ 0.5-4.0","ลำแสงพุ่งต่ำต้องไม่เบนซ้าย และมีมุมกดระหว่างร้อยละ 0.5-4.0","ลำแสงพุ่งต่ำต้องไม่เบนขวา และมีมุมกดระหว่างร้อยละ 2.9-4.0","ลำแสงพุ่งต่ำต้องไม่เบนขวา และมีมุมกดระหว่างร้อยละ 0.4-5.0"]},
 {q:"การเบี่ยงเบนลำแสงจากโคมไฟแสงพุ่งไกลของรถ มีหลักเกณฑ์อย่างไรจึงผ่านการตรวจสภาพ",a:0,c:["ลำแสงพุ่งไกลต้องไม่เบนขวา และต้องไม่สูงกว่าแนวขนานกับพื้นราบ","ลำแสงพุ่งไกลต้องไม่เบนซ้าย และต้องไม่สูงกว่าแนวขนานกับพื้นราบ","ลำแสงพุ่งไกลต้องไม่เบนซ้าย และต้องไม่ต่ำกว่าแนวขนานกับพื้นราบ","ลำแสงพุ่งไกลต้องไม่เบนขวา และต้องไม่ต่ำกว่าแนวขนานกับพื้นราบ","ลำแสงพุ่งไกลต้องไม่เบนซ้าย และต้องสูงกว่าแนวขนานกับพื้นราบ"]},
@@ -1251,14 +1744,14 @@ const BANK = [
 {q:"เมื่อต้องตรวจวัดระดับเสียงของรถยนต์หรือรถจักรยานยนต์ ข้อใดกล่าวถูกต้อง",a:0,c:["ปรับเทียบความเที่ยงตรงกับเครื่องกำเนิดเสียงมาตรฐาน (Acoustic Calibrator)","รถต้องจอดห่างผนังหรือทางเท้าไม่เกิน 0.5 เมตร","ปรับเครื่องวัดระดับเสียงไว้ที่ลักษณะความไวตอบรับเสียง Slow","ปรับเครื่องวัดระดับเสียงไว้ที่วงจรถ่วงน้ำหนัก C","ความสูงของหัวไมโครโฟนต้องเสมอระดับปลายท่อไอเสีย แต่ต้องสูงไม่น้อยกว่า 50 เซนติเมตร"]},
 {q:"การเตรียมการตรวจวัดระดับเสียงของรถยนต์ ที่ระยะ 0.5 เมตร ข้อใดกล่าวไม่ถูกต้อง (ชุด ก)",a:0,c:["ต้องมีระยะห่างจากรถยนต์ที่จะทำการวัด ตั้งแต่ 3 เมตร แต่ไม่ถึง 5 เมตร","สอบเทียบกับเครื่องกำเนิดเสียงมาตรฐาน","ปรับลักษณะความไวตอบรับเสียง Fast","ปรับเครื่องวัดเสียงไว้ที่วงจรถ่วงน้ำหนัก A","สถานที่เป็นพื้นราบทำด้วยคอนกรีตหรือแอสฟัลต์"]},
 {q:"การเตรียมการตรวจวัดระดับเสียงของรถยนต์ ที่ระยะ 0.5 เมตร ข้อใดกล่าวไม่ถูกต้อง (ชุด ข)",a:1,c:["สอบเทียบกับเครื่องกำเนิดเสียงมาตรฐาน","ปรับลักษณะความไวตอบรับเสียง Slow","ปรับเครื่องวัดเสียงไว้ที่วงจรถ่วงน้ำหนัก A","ต้องมีระยะห่างจากรถยนต์ที่จะทำการวัด ตั้งแต่ 3 เมตร แต่ไม่ถึง 10 เมตร","สถานที่เป็นพื้นราบทำด้วยคอนกรีตหรือแอสฟัลต์"]},
-{q:"เมื่อต้องตรวจวัดระดับเสียงของรถยนต์หรือรถจักรยานยนต์ ข้อใดกล่าวไม่ถูกต้อง (วงจร C)",a:2,c:["ปรับเทียบความเที่ยงตรงกับเครื่องกำเนิดเสียงมาตรฐาน (Acoustic Calibrator)","ปรับเครื่องวัดระดับเสียงไว้ที่ลักษณะความไวตอบรับเสียง Fast","ปรับเครื่องวัดระดับเสียงไว้ที่วงจรถ่วงน้ำหนัก C","รถต้องจอดห่างผนังหรือทางเท้าไม่เกิน 1.0 เมตร","ความสูงของหัวไมโครโฟนต้องเสมอระดับปลายท่อไอเสีย แต่ต้องสูงไม่น้อยกว่า 20 เซนติเมตร"]},
+{q:"เมื่อต้องตรวจวัดระดับเสียงของรถยนต์หรือรถจักรยานยนต์ ข้อใดกล่าวไม่ถูกต้อง (ชุดที่ 4)",a:2,c:["ปรับเทียบความเที่ยงตรงกับเครื่องกำเนิดเสียงมาตรฐาน (Acoustic Calibrator)","ปรับเครื่องวัดระดับเสียงไว้ที่ลักษณะความไวตอบรับเสียง Fast","ปรับเครื่องวัดระดับเสียงไว้ที่วงจรถ่วงน้ำหนัก C","รถต้องจอดห่างผนังหรือทางเท้าไม่เกิน 1.0 เมตร","ความสูงของหัวไมโครโฟนต้องเสมอระดับปลายท่อไอเสีย แต่ต้องสูงไม่น้อยกว่า 20 เซนติเมตร"]},
 {q:"การเตรียมความพร้อมในการวัดเสียง ข้อใดกล่าวไม่ถูกต้อง",a:4,c:["ตรวจดูตำแหน่งปลายท่อไอเสียเพื่อกำหนดระยะห่างให้ถูกต้อง","ปรับความสูงของเครื่องวัดเสียงให้ปลายไมโครโฟนอยู่ระดับเดียวกับปลายท่อไอเสีย","เดินเครื่องยนต์จนมีอุณหภูมิใช้งานปกติ","ตรวจวัดระดับเสียงของสภาพแวดล้อมต้องไม่เกินกว่าที่กำหนด","ปรับวงจรถ่วงน้ำหนักของเครื่องวัดเสียงไปตำแหน่ง เดซิเบลบี (dbB)"]},
-{q:"เมื่อต้องตรวจวัดระดับเสียง ข้อใดกล่าวไม่ถูกต้อง (จอดห่างไม่เกิน 0.5 เมตร)",a:0,c:["รถต้องจอดห่างผนังหรือทางเท้าไม่เกิน 0.5 เมตร","ความสูงของหัวไมโครโฟนต้องเสมอระดับปลายท่อไอเสีย แต่ต้องสูงไม่น้อยกว่า 20 เซนติเมตร","ปรับเครื่องวัดระดับเสียงไว้ที่วงจรถ่วงน้ำหนัก A","ปรับเทียบความเที่ยงตรงกับเครื่องกำเนิดเสียงมาตรฐาน (Acoustic Calibrator)","ปรับเครื่องวัดระดับเสียงไว้ที่ลักษณะความไวตอบรับเสียง Fast"]},
-{q:"เมื่อต้องตรวจวัดระดับเสียง ข้อใดกล่าวไม่ถูกต้อง (จอดห่างไม่น้อยกว่า 0.5 เมตร)",a:0,c:["รถต้องจอดห่างทางเท้าไม่น้อยกว่า 0.5 เมตร","ความสูงของหัวไมโครโฟนต้องเสมอระดับปลายท่อไอเสีย แต่ต้องสูงไม่น้อยกว่า 20 เซนติเมตร","ปรับเครื่องวัดระดับเสียงไว้ที่วงจรถ่วงน้ำหนัก A","ปรับเทียบความเที่ยงตรงกับเครื่องกำเนิดเสียงมาตรฐาน (Acoustic Calibrator)","ปรับเครื่องวัดระดับเสียงไว้ที่ลักษณะความไวตอบรับเสียง Fast"]},
-{q:"เมื่อต้องตรวจวัดระดับเสียง ข้อใดกล่าวไม่ถูกต้อง (45 เซนติเมตร)",a:4,c:["ปรับเทียบความเที่ยงตรงกับเครื่องกำเนิดเสียงมาตรฐาน (Acoustic Calibrator)","ปรับเครื่องวัดระดับเสียงไว้ที่ลักษณะความไวตอบรับเสียง Fast","ปรับเครื่องวัดระดับเสียงไว้ที่วงจรถ่วงน้ำหนัก A","รถต้องจอดห่างผนังหรือทางเท้าไม่เกิน 1.0 เมตร","ความสูงของหัวไมโครโฟนต้องเสมอระดับปลายท่อไอเสีย แต่ต้องสูงไม่น้อยกว่า 45 เซนติเมตร"]},
-{q:"ข้อใดถูกต้องที่สุด เกี่ยวกับการตรวจวัดระดับเสียง (2 dBA ตรวจใหม่)",a:4,c:["ตรวจวัดมากกว่าสองครั้ง ใช้ค่าสูงสุดเป็นเกณฑ์","ตรวจวัดสองครั้ง ใช้ค่าน้อยสุดเป็นเกณฑ์","ตรวจวัดสองครั้ง ใช้ค่าเฉลี่ยเป็นเกณฑ์","ตรวจวัดสองครั้ง ถ้าต่างกันเกิน 3 dBA ให้ตรวจวัดใหม่","ตรวจวัดสองครั้ง ถ้าต่างกันเกิน 2 dBA ให้ตรวจวัดใหม่"]},
-{q:"ข้อใดถูกต้องที่สุดเกี่ยวกับวิธีการตรวจวัดระดับเสียงของรถยนต์ (ค่าสูงสุด)",a:4,c:["ตรวจวัด 2 ครั้ง ต่างกันไม่เกิน 2 เดซิเบล เอ ให้ถือค่าเฉลี่ยเป็นระดับเสียงของรถยนต์","ตรวจวัด 2 ครั้ง ต่างกันไม่เกิน 2 เดซิเบล เอ ให้ถือค่าต่ำสุดเป็นระดับเสียงของรถยนต์","ตรวจวัด 2 ครั้ง ต่างกันไม่เกิน 5 เดซิเบล เอ ให้ถือค่าสูงสุดเป็นระดับเสียงของรถยนต์","ตรวจวัด 2 ครั้ง ต่างกันไม่เกิน 5 เดซิเบล เอ ให้ถือค่าเฉลี่ยเป็นระดับเสียงของรถยนต์","ตรวจวัด 2 ครั้ง ต่างกันไม่เกิน 2 เดซิเบล เอ ให้ถือค่าสูงสุดเป็นระดับเสียงของรถยนต์"]},
-{q:"ข้อใดถูกต้องที่สุดเกี่ยวกับวิธีการตรวจวัดระดับเสียงของรถยนต์ (เริ่มต้นใหม่)",a:2,c:["ตรวจวัด 2 ครั้ง ใช้ค่าที่วัดครั้งใดก็ได้เป็นระดับเสียงของรถยนต์","ตรวจวัด 2 ครั้ง ถือค่าต่ำสุดเป็นระดับเสียงของรถยนต์","ถ้าค่าจากการตรวจทั้ง 2 ครั้งต่างกันเกิน 2 เดซิเบล เอ ให้ตรวจวัดระดับเสียงโดยเริ่มต้นใหม่","ตรวจวัด 2 ครั้ง ถือค่าเฉลี่ยเป็นระดับเสียงของรถยนต์","ตรวจวัด 1 ครั้ง ถ้าเสียงดังเกินเกณฑ์ให้ทำการวัดใหม่ 1 ครั้ง"]},
+{q:"เมื่อต้องตรวจวัดระดับเสียง ข้อใดกล่าวไม่ถูกต้อง (ชุดที่ 2)",a:0,c:["รถต้องจอดห่างผนังหรือทางเท้าไม่เกิน 0.5 เมตร","ความสูงของหัวไมโครโฟนต้องเสมอระดับปลายท่อไอเสีย แต่ต้องสูงไม่น้อยกว่า 20 เซนติเมตร","ปรับเครื่องวัดระดับเสียงไว้ที่วงจรถ่วงน้ำหนัก A","ปรับเทียบความเที่ยงตรงกับเครื่องกำเนิดเสียงมาตรฐาน (Acoustic Calibrator)","ปรับเครื่องวัดระดับเสียงไว้ที่ลักษณะความไวตอบรับเสียง Fast"]},
+{q:"เมื่อต้องตรวจวัดระดับเสียง ข้อใดกล่าวไม่ถูกต้อง (ชุดที่ 3)",a:0,c:["รถต้องจอดห่างทางเท้าไม่น้อยกว่า 0.5 เมตร","ความสูงของหัวไมโครโฟนต้องเสมอระดับปลายท่อไอเสีย แต่ต้องสูงไม่น้อยกว่า 20 เซนติเมตร","ปรับเครื่องวัดระดับเสียงไว้ที่วงจรถ่วงน้ำหนัก A","ปรับเทียบความเที่ยงตรงกับเครื่องกำเนิดเสียงมาตรฐาน (Acoustic Calibrator)","ปรับเครื่องวัดระดับเสียงไว้ที่ลักษณะความไวตอบรับเสียง Fast"]},
+{q:"เมื่อต้องตรวจวัดระดับเสียง ข้อใดกล่าวไม่ถูกต้อง (ชุดที่ 4)",a:4,c:["ปรับเทียบความเที่ยงตรงกับเครื่องกำเนิดเสียงมาตรฐาน (Acoustic Calibrator)","ปรับเครื่องวัดระดับเสียงไว้ที่ลักษณะความไวตอบรับเสียง Fast","ปรับเครื่องวัดระดับเสียงไว้ที่วงจรถ่วงน้ำหนัก A","รถต้องจอดห่างผนังหรือทางเท้าไม่เกิน 1.0 เมตร","ความสูงของหัวไมโครโฟนต้องเสมอระดับปลายท่อไอเสีย แต่ต้องสูงไม่น้อยกว่า 45 เซนติเมตร"]},
+{q:"ข้อใดถูกต้องที่สุด เกี่ยวกับการตรวจวัดระดับเสียง (ชุดที่ 2)",a:4,c:["ตรวจวัดมากกว่าสองครั้ง ใช้ค่าสูงสุดเป็นเกณฑ์","ตรวจวัดสองครั้ง ใช้ค่าน้อยสุดเป็นเกณฑ์","ตรวจวัดสองครั้ง ใช้ค่าเฉลี่ยเป็นเกณฑ์","ตรวจวัดสองครั้ง ถ้าต่างกันเกิน 3 dBA ให้ตรวจวัดใหม่","ตรวจวัดสองครั้ง ถ้าต่างกันเกิน 2 dBA ให้ตรวจวัดใหม่"]},
+{q:"ข้อใดถูกต้องที่สุดเกี่ยวกับวิธีการตรวจวัดระดับเสียงของรถยนต์ (ชุดที่ 2)",a:4,c:["ตรวจวัด 2 ครั้ง ต่างกันไม่เกิน 2 เดซิเบล เอ ให้ถือค่าเฉลี่ยเป็นระดับเสียงของรถยนต์","ตรวจวัด 2 ครั้ง ต่างกันไม่เกิน 2 เดซิเบล เอ ให้ถือค่าต่ำสุดเป็นระดับเสียงของรถยนต์","ตรวจวัด 2 ครั้ง ต่างกันไม่เกิน 5 เดซิเบล เอ ให้ถือค่าสูงสุดเป็นระดับเสียงของรถยนต์","ตรวจวัด 2 ครั้ง ต่างกันไม่เกิน 5 เดซิเบล เอ ให้ถือค่าเฉลี่ยเป็นระดับเสียงของรถยนต์","ตรวจวัด 2 ครั้ง ต่างกันไม่เกิน 2 เดซิเบล เอ ให้ถือค่าสูงสุดเป็นระดับเสียงของรถยนต์"]},
+{q:"ข้อใดถูกต้องที่สุดเกี่ยวกับวิธีการตรวจวัดระดับเสียงของรถยนต์ (ชุดที่ 3)",a:2,c:["ตรวจวัด 2 ครั้ง ใช้ค่าที่วัดครั้งใดก็ได้เป็นระดับเสียงของรถยนต์","ตรวจวัด 2 ครั้ง ถือค่าต่ำสุดเป็นระดับเสียงของรถยนต์","ถ้าค่าจากการตรวจทั้ง 2 ครั้งต่างกันเกิน 2 เดซิเบล เอ ให้ตรวจวัดระดับเสียงโดยเริ่มต้นใหม่","ตรวจวัด 2 ครั้ง ถือค่าเฉลี่ยเป็นระดับเสียงของรถยนต์","ตรวจวัด 1 ครั้ง ถ้าเสียงดังเกินเกณฑ์ให้ทำการวัดใหม่ 1 ครั้ง"]},
 {q:"โปรแกรม Inspection Online ในส่วนการวัดระดับเสียง กรณีต้องเริ่มต้นวัดใหม่ทั้งหมด ข้อใดถูกต้อง",a:1,c:["กดรับค่าครั้งที่ 1 ได้ 88.50 dBA ครั้งที่ 2 ได้ 89.00 dBA","กดรับค่าครั้งที่ 1 ได้ 87.50 dBA ครั้งที่ 2 ได้ 89.60 dBA","กดรับค่าครั้งที่ 1 ได้ 89.50 dBA ครั้งที่ 2 ได้ 91.00 dBA","กดรับค่าครั้งที่ 1 ได้ 50.00 dBA ครั้งที่ 2 ได้ 52.00 dBA","กดรับค่าครั้งที่ 1 ได้ 93.00 dBA ครั้งที่ 2 ได้ 91.00 dBA"]},
 {q:"ข้อใดถูกต้องที่สุด เกี่ยวกับการตรวจวัดระดับเสียง (ใช้ค่าใดเป็นเกณฑ์)",a:2,c:["ใช้ค่าเฉลี่ยเป็นเกณฑ์","ใช้ค่าการวัดครั้งสุดท้ายเป็นเกณฑ์","ใช้ค่าสูงสุดเป็นเกณฑ์","ใช้ค่าผลต่างเป็นเกณฑ์","ใช้ค่าต่ำสุดเป็นเกณฑ์"]},
 {q:"กรณีรถจักรยานยนต์เครื่องยนต์ 2 จังหวะ ที่ไม่ทราบความเร็วรอบที่ให้กำลังสูงสุด ใช้ความเร็วรอบเท่าใดในการวัดระดับเสียง",a:1,c:["ความเร็วรอบเท่าใดก็ได้","ความเร็วรอบที่ 3,750 รอบต่อนาที","ความเร็วรอบที่ 3,500 รอบต่อนาที","ความเร็วรอบที่ 3,000 รอบต่อนาที","ความเร็วรอบที่ 4,000 รอบต่อนาที"]},
@@ -1316,7 +1809,8 @@ Object.keys(IMG).forEach(k=>{ if(BANK[+k]) BANK[+k].img = IMG[k]; });
 const TLAB = ["ก","ข","ค","ง","จ"];
 const PASS = 0.6; // เกณฑ์ผ่าน 60%
 
-let cfg = { count:244, mode:"instant", shuffleQ:true, shuffleC:true, catId:-1 };
+let cfg = { count:244, mode:"instant", shuffleQ:true, shuffleC:true, catId:-1, fx:true, sound:true };
+let streak = 0;
 let quiz = [];      // ชุดข้อสอบรอบนี้ (แต่ละข้อมี order ของตัวเลือก)
 let idx = 0, score = 0, answeredCount = 0;
 
@@ -1357,16 +1851,23 @@ $("btn-start").addEventListener("click", startQuiz);
 $("btn-again").addEventListener("click", startQuiz);
 $("btn-home").addEventListener("click", ()=>show("start"));
 $("btn-quit").addEventListener("click", ()=>{ if(confirm("ต้องการออกและกลับหน้าแรกหรือไม่? ผลรอบนี้จะไม่ถูกบันทึก")) show("start"); });
-$("btn-next").addEventListener("click", nextQuestion);
+$("btn-next").addEventListener("click", ()=>{
+  const nb = $("btn-next");
+  if(nb.dataset.mode === "confirm") confirmAnswer();
+  else nextQuestion();
+});
 
 function show(which){
-  ["start","quiz","result","read"].forEach(s=> $(s).classList.toggle("hidden", s!==which));
+  ["start","quiz","result","read","summary"].forEach(s=> $(s).classList.toggle("hidden", s!==which));
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function startQuiz(){
   cfg.shuffleQ = $("sw-shuffle").checked;
   cfg.shuffleC = $("sw-shuffle-choices").checked;
+  cfg.fx = $("sw-fx").checked;
+  cfg.sound = $("sw-sound").checked;
+  streak = 0; updateStreakChip(); syncFxToggle();
 
   // กรองตามหมวดที่เลือก
   let base = (cfg.catId===-1) ? BANK.slice() : BANK.filter((_,i)=> CAT[i]===cfg.catId);
@@ -1377,7 +1878,7 @@ function startQuiz(){
     // สร้างลำดับการแสดงตัวเลือก
     let order = item.c.map((_,i)=>i);
     if(cfg.shuffleC) order = shuffle(order);
-    return { item, order, picked:null };
+    return { item, order, picked:null, selected:null };
   });
 
   idx = 0; score = 0; answeredCount = 0;
@@ -1406,7 +1907,7 @@ function renderQuestion(){
       `<span class="lab">${TLAB[displayPos]}</span>`+
       `<span class="ctxt">${cur.item.c[origIndex]}</span>`+
       `<span class="mark"></span>`;
-    btn.addEventListener("click", ()=> pick(displayPos, origIndex, btn));
+    btn.addEventListener("click", ()=> selectChoice(origIndex, btn));
     wrap.appendChild(btn);
   });
 
@@ -1414,21 +1915,59 @@ function renderQuestion(){
   fb.className = "feedback"; fb.innerHTML = "";
 
   const nextBtn = $("btn-next");
-  nextBtn.disabled = (cur.picked === null);
-  nextBtn.textContent = (idx === quiz.length-1) ? "ดูผลคะแนน" : "ข้อถัดไป";
-
-  // ถ้าเคยตอบข้อนี้แล้ว (กดย้อน) ให้แสดงสถานะเดิม
-  if(cur.picked !== null) replayAnswered(cur);
+  if(cur.picked !== null){
+    // ตอบ (ยืนยัน) ไปแล้ว -> ปุ่มเป็น "ข้อถัดไป/ดูผล"
+    nextBtn.dataset.mode = "next";
+    nextBtn.textContent = (idx === quiz.length-1) ? "ดูผลคะแนน" : "ข้อถัดไป";
+    nextBtn.disabled = false;
+    setConfirmHint("");
+    replayAnswered(cur);
+  }else{
+    // ยังไม่ยืนยัน -> ปุ่มเป็น "ยืนยันคำตอบ"
+    nextBtn.dataset.mode = "confirm";
+    nextBtn.textContent = "ยืนยันคำตอบ";
+    nextBtn.disabled = (cur.selected === null);
+    // คืนสถานะที่แตะเลือกไว้ (กันมือลั่น: เปลี่ยนใจได้ก่อนยืนยัน)
+    if(cur.selected !== null){
+      const kids = $("choices").children;
+      cur.order.forEach((oi,pos)=>{ if(oi===cur.selected) kids[pos].classList.add("selected"); });
+      setConfirmHint("แตะเปลี่ยนได้ แล้วกด “ยืนยันคำตอบ”");
+    }else{
+      setConfirmHint("แตะเลือกคำตอบ แล้วกด “ยืนยันคำตอบ”");
+    }
+  }
 }
 
-function pick(displayPos, origIndex, btn){
-  const cur = quiz[idx];
-  if(cur.picked !== null) return; // ตอบไปแล้ว ล็อก
+function setConfirmHint(t){ const h=$("confirm-hint"); if(h) h.textContent = t; }
 
+/* แตะเลือก (ยังไม่ล็อก) เปลี่ยนใจได้เรื่อย ๆ — กันมือลั่น */
+function selectChoice(origIndex, btn){
+  const cur = quiz[idx];
+  if(cur.picked !== null) return;          // ยืนยันไปแล้ว ล็อก
+  cur.selected = origIndex;
+  [...$("choices").children].forEach(c=> c.classList.remove("selected"));
+  btn.classList.add("selected");
+  const nb = $("btn-next");
+  nb.dataset.mode = "confirm";
+  nb.textContent = "ยืนยันคำตอบ";
+  nb.disabled = false;
+  setConfirmHint("แตะเปลี่ยนได้ แล้วกด “ยืนยันคำตอบ”");
+}
+
+/* ยืนยัน = ล็อกคำตอบ + เฉลย + เอฟเฟกต์ */
+function confirmAnswer(){
+  const cur = quiz[idx];
+  if(cur.picked !== null || cur.selected === null) return;
+
+  const origIndex = cur.selected;
   cur.picked = origIndex;
   answeredCount++;
   const isCorrect = origIndex === cur.item.a;
   if(isCorrect){ score++; $("score").textContent = score; }
+
+  const selBtn = $("choices").children[ cur.order.indexOf(origIndex) ];
+  if(selBtn) selBtn.classList.remove("selected");
+  setConfirmHint("");
 
   if(cfg.mode === "instant"){
     revealAll(cur);
@@ -1436,18 +1975,24 @@ function pick(displayPos, origIndex, btn){
     if(isCorrect){
       fb.className = "feedback show ok";
       fb.innerHTML = `✓ ถูกต้อง!`;
+      fxCorrect(selBtn);
     }else{
       const ansPos = cur.order.indexOf(cur.item.a);
       fb.className = "feedback show no";
       fb.innerHTML = `✕ ยังไม่ถูก <span class="fb-ans">เฉลย: ${TLAB[ansPos]}. ${cur.item.c[cur.item.a]}</span>`;
+      fxWrong(selBtn);
     }
   }else{
-    // โหมดเฉลยตอนจบ: แค่ทำเครื่องหมายว่าเลือกข้อนี้ แล้วล็อก
-    btn.style.borderColor = "var(--brand)";
-    btn.style.background = "#eef4ff";
+    // โหมดเฉลยตอนจบ: ทำเครื่องหมายว่าเลือกข้อนี้ แล้วล็อก (ยังไม่เฉลย)
+    if(selBtn){ selBtn.style.borderColor = "var(--brand)"; selBtn.style.background = "#eef4ff"; }
     [...$("choices").children].forEach(c=> c.disabled = true);
+    if(isCorrect) fxCorrect(selBtn); else fxWrong(selBtn);
   }
-  $("btn-next").disabled = false;
+
+  const nb = $("btn-next");
+  nb.dataset.mode = "next";
+  nb.textContent = (idx === quiz.length-1) ? "ดูผลคะแนน" : "ข้อถัดไป";
+  nb.disabled = false;
 }
 
 function revealAll(cur){
@@ -1507,6 +2052,13 @@ function showResult(){
   stamp.className = "result-stamp " + (passed ? "pass":"fail");
   $("r-stamp-big").textContent = passed ? "ผ่าน" : "ไม่ผ่าน";
   $("r-stamp-small").textContent = passed ? "PASSED" : "TRY AGAIN";
+  if(cfg.fx){
+    stamp.classList.remove("slam"); void stamp.offsetWidth; stamp.classList.add("slam");
+    setTimeout(()=>{
+      if(passed){ confettiBurst(window.innerWidth/2, 120, 160); toast("🏆 ผ่านแล้ว! เก่งมากช่างงง!", "mega"); playWin(); }
+      else { toast("ยังไม่ผ่าน… ไปลุยรอบใหม่! 💪", "taunt"); playFail(); }
+    }, 260);
+  }
 
   // review
   const rev = $("review");
@@ -1532,7 +2084,7 @@ function showResult(){
   show("result");
 }
 
-/* คีย์ลัด 1-5 เลือกตัวเลือก, Enter ไปข้อถัดไป */
+/* คีย์ลัด 1-5 แตะเลือกตัวเลือก, Enter = ยืนยัน/ไปข้อถัดไป */
 document.addEventListener("keydown", e=>{
   if($("quiz").classList.contains("hidden")) return;
   if(e.key>="1" && e.key<="5"){
@@ -1540,7 +2092,8 @@ document.addEventListener("keydown", e=>{
     const btn = $("choices").children[pos];
     if(btn && !btn.disabled) btn.click();
   }else if(e.key==="Enter" && !$("btn-next").disabled){
-    nextQuestion();
+    const nb=$("btn-next");
+    if(nb.dataset.mode==="confirm") confirmAnswer(); else nextQuestion();
   }
 });
 /* ============ READ ALL / ZOOM / PAGINATE / PRINT ============ */
@@ -1640,6 +2193,177 @@ $("rp-next").addEventListener("click", ()=>{ rPage++; renderReadPage(); });
 $("rp-prev2").addEventListener("click", ()=>{ rPage--; renderReadPage(); });
 $("rp-next2").addEventListener("click", ()=>{ rPage++; renderReadPage(); });
 $("rp-select").addEventListener("change", e=>{ rPage=+e.target.value; renderReadPage(); });
+
+/* ============ อ่านสรุปแนวข้อสอบ ============ */
+let smZoom = 1;
+function smApplyZoom(){ smZoom=Math.max(0.7,Math.min(2.2,smZoom));
+  $("summary").style.setProperty("--s", smZoom.toFixed(2)); $("sm-zl").textContent=Math.round(smZoom*100)+"%"; }
+function openSummary(){ smApplyZoom(); show("summary"); window.scrollTo({top:0,behavior:"smooth"}); }
+$("btn-summary").addEventListener("click", openSummary);
+$("sm-back").addEventListener("click", ()=>show("start"));
+$("sm-zi").addEventListener("click", ()=>{ smZoom+=0.1; smApplyZoom(); });
+$("sm-zo").addEventListener("click", ()=>{ smZoom-=0.1; smApplyZoom(); });
+$("sm-print").addEventListener("click", ()=>{
+  document.body.classList.add("print-summary");
+  window.print();
+});
+window.addEventListener("afterprint", ()=> document.body.classList.remove("print-summary"));
+/* ปิดการเลื่อนแบบ jump ให้ลิงก์หมวดเลื่อนแบบนุ่ม */
+document.querySelectorAll('.sm-nav a').forEach(a=>{
+  a.addEventListener("click", e=>{
+    const el=document.querySelector(a.getAttribute("href"));
+    if(el){ e.preventDefault(); el.scrollIntoView({behavior:"smooth",block:"start"}); }
+  });
+});
+
+/* ============ FX ENGINE (โหมดจัดเต็ม) ============ */
+const RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const CHEERS = ["ถูกต้อง! ✓","แม่นมาก! 🎯","โหดช่างงง! 💪","ปั๊วะ! เข้าเป้า ✅","เฉียบ! 😎","ระดับมือโปร ตรอ.! 🔧"];
+const CHEER3 = "ถูกติดกัน 3 🔥 ไฟลุกแล้ว!";
+const CHEER5 = "5 ติด! ระดับเซียน ตรอ. 🏆";
+const CHEER7 = "7 ติด! เฉลยไม่ต้องดูแล้วมั้ง 😏";
+const CHEER10= "10 ติด! เทพ ตรอ. จุติ! 👑";
+const TAUNTS = [
+  "มั่นใจเต็มร้อย ผิดเต็มร้อยเลยจ้า 😌",
+  "ข้อนี้เฉลยแอบยิ้มอยู่ 😏",
+  "ควันดำยังน้อยกว่าความมั่นใจนายอีก 💨",
+  "เบรกความมั่นใจไว้ก่อนน้า ห้ามล้อไม่ผ่าน 🛑",
+  "ใกล้แล้ว… ใกล้แบบคนละข้อ 🤏",
+  "ไปทบทวนก่อนน้า เดี๋ยวหัวหน้าถาม 👀",
+  "ตราประทับ ‘ไม่ผ่าน’ กำลังอุ่นเครื่อง 🔴",
+  "ตอบแบบนี้ รถไม่ผ่าน คนก็ไม่ผ่าน 😬",
+  "เฉลยร้องไห้เลย ที่นายเลือกข้อนั้น 😭",
+  "ศูนย์ล้อยังตรงกว่าคำตอบนายอีก 🎯",
+  "เดาแม่นเป็นบางที… วันนี้ไม่ใช่บางที 🎲",
+  "ผิดได้สวยงามมาก ขอปรบมือ 👏 (ประชด)"
+];
+const CONFCOLORS = ["#1f5fbf","#13855a","#c0392b","#e0a52e","#7d3cff","#ff5fa2","#22c1c3"];
+const EMOJIS = ["🎉","🔥","⭐","💥","🏆","✅","👏"];
+const $fx = ()=>document.getElementById("fx-layer");
+
+function rand(a,b){ return a+Math.random()*(b-a); }
+
+function confettiBurst(cx, cy, count){
+  if(RM) return;
+  const layer=$fx(); count=count||60;
+  for(let i=0;i<count;i++){
+    const el=document.createElement("div");
+    const emoji = Math.random()<0.18;
+    el.className = emoji ? "emoji-drop" : "confetti";
+    if(emoji){ el.textContent = EMOJIS[(Math.random()*EMOJIS.length)|0]; }
+    else { el.style.background = CONFCOLORS[(Math.random()*CONFCOLORS.length)|0];
+           el.style.height = (8+Math.random()*10)+"px"; }
+    el.style.left=cx+"px"; el.style.top=cy+"px";
+    layer.appendChild(el);
+    const ang=rand(-Math.PI, Math.PI), spd=rand(6,15);
+    let vx=Math.cos(ang)*spd, vy=Math.sin(ang)*spd-rand(6,12);
+    let x=0,y=0,rot=rand(0,360),vr=rand(-14,14),life=rand(900,1500),t0=performance.now();
+    (function anim(t){
+      const dt=Math.min(32,t-t0); t0=t;
+      vy+=0.55; vx*=0.99; x+=vx; y+=vy; rot+=vr; life-=dt;
+      el.style.transform=`translate(${x}px,${y}px) rotate(${rot}deg)`;
+      el.style.opacity=Math.max(0,life/500);
+      if(life>0) requestAnimationFrame(anim); else el.remove();
+    })(t0);
+  }
+}
+function confettiFromEl(el, count){
+  const r=el.getBoundingClientRect();
+  confettiBurst(r.left+r.width/2, r.top+r.height/2, count);
+}
+function emojiRain(count){
+  if(RM) return;
+  const layer=$fx();
+  for(let i=0;i<count;i++){
+    const el=document.createElement("div"); el.className="emoji-drop";
+    el.textContent=EMOJIS[(Math.random()*EMOJIS.length)|0];
+    el.style.left=rand(0,window.innerWidth)+"px"; el.style.top="-40px";
+    el.style.fontSize=rand(22,40)+"px"; layer.appendChild(el);
+    let y=-40, vy=rand(3,7), rot=rand(0,360), vr=rand(-8,8), t0=performance.now();
+    (function anim(t){ const dt=Math.min(32,t-t0); t0=t; y+=vy*(dt/16); rot+=vr;
+      el.style.transform=`translateY(${y}px) rotate(${rot}deg)`;
+      if(y<window.innerHeight+60) requestAnimationFrame(anim); else el.remove();
+    })(t0);
+  }
+}
+
+let toastTimer=null;
+function toast(msg, kind){
+  const layer=document.getElementById("toast-layer");
+  const el=document.createElement("div");
+  el.className="toast "+(kind||"cheer"); el.textContent=msg;
+  layer.appendChild(el);
+  setTimeout(()=>{ el.classList.add("out"); setTimeout(()=>el.remove(),320); }, kind==="mega"?2200:1600);
+}
+
+function updateStreakChip(){
+  const chip=$("streak-chip");
+  if(streak>=2 && cfg.fx){ chip.classList.add("on"); $("streak-n").textContent=streak;
+    chip.classList.remove("bump"); void chip.offsetWidth; chip.classList.add("bump"); }
+  else chip.classList.remove("on");
+}
+
+function fxCorrect(btn){
+  streak++;
+  if(!cfg.fx){ return; }
+  updateStreakChip();
+  if(btn){ btn.classList.add("fx-correct"); confettiFromEl(btn, 26); }
+  // escalating messages
+  if(streak===3){ toast(CHEER3,"cheer"); emojiRain(10); }
+  else if(streak===5){ toast(CHEER5,"mega"); confettiBurst(window.innerWidth/2,120,120); emojiRain(16); }
+  else if(streak===7){ toast(CHEER7,"cheer"); emojiRain(14); }
+  else if(streak>=10 && streak%5===0){ toast(CHEER10,"mega"); confettiBurst(window.innerWidth/2,120,160); emojiRain(24); }
+  else { toast(CHEERS[(Math.random()*CHEERS.length)|0],"cheer"); }
+  playDing(Math.min(streak,8));
+}
+function fxWrong(btn){
+  streak=0; updateStreakChip();
+  if(!cfg.fx){ return; }
+  const app=document.querySelector(".app"); if(app && !RM){ app.classList.remove("shake"); void app.offsetWidth; app.classList.add("shake"); setTimeout(()=>app.classList.remove("shake"),520); }
+  if(btn && !RM){ btn.classList.add("fx-wrong"); setTimeout(()=>btn.classList.remove("fx-wrong"),480); }
+  toast(TAUNTS[(Math.random()*TAUNTS.length)|0],"taunt");
+  playFail();
+}
+
+/* ---- WebAudio (สังเคราะห์เสียงในตัว) ---- */
+let AC=null;
+function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ AC=null; } } return AC; }
+function tone(freq,dur,type,vol,when){
+  const a=ac(); if(!a) return; const t=(when||a.currentTime);
+  const o=a.createOscillator(), g=a.createGain();
+  o.type=type||"sine"; o.frequency.value=freq;
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol||0.2,t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+dur+0.02);
+}
+function playDing(level){
+  if(!cfg.sound||!cfg.fx) return; const a=ac(); if(!a) return;
+  const base=[523.25,587.33,659.25,783.99]; const t=a.currentTime;
+  const n=Math.min(1+Math.floor(level/2),4);
+  for(let i=0;i<n;i++) tone(base[i%base.length]*(1+Math.floor(i/4)), 0.16, "triangle", 0.18, t+i*0.07);
+}
+function playFail(){
+  if(!cfg.sound||!cfg.fx) return; const a=ac(); if(!a) return; const t=a.currentTime;
+  tone(311.13,0.16,"sawtooth",0.16,t); tone(233.08,0.28,"sawtooth",0.16,t+0.14);
+}
+function playWin(){
+  if(!cfg.sound||!cfg.fx) return; const a=ac(); if(!a) return; const t=a.currentTime;
+  [523,659,784,1047].forEach((f,i)=> tone(f,0.22,"triangle",0.2,t+i*0.12));
+}
+
+/* ---- ปุ่มสลับโหมดจัดเต็มกลางเกม ---- */
+function syncFxToggle(){
+  const b=$("fx-toggle"); if(!b) return;
+  b.textContent = cfg.fx ? "🎉" : "🔇";
+  b.classList.toggle("off", !cfg.fx);
+  if(!cfg.fx) $("streak-chip").classList.remove("on"); else updateStreakChip();
+}
+$("fx-toggle").addEventListener("click", ()=>{
+  cfg.fx=!cfg.fx; if(cfg.fx && !AC) ac(); syncFxToggle();
+  toast(cfg.fx?"เปิดโหมดจัดเต็ม 🎉":"ปิดโหมดจัดเต็ม (โหมดจริงจัง) 🔇", cfg.fx?"cheer":"taunt");
+});
+// ปลุก AudioContext ครั้งแรกที่แตะจอ (นโยบายเบราว์เซอร์)
+document.addEventListener("pointerdown", ()=>{ if(cfg.sound) ac(); }, {once:true});
 
 </script>
 </body>
