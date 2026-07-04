@@ -297,6 +297,17 @@
   }
   .read-pagebar .pinfo{font-weight:700;color:var(--ink-soft);font-size:.92rem}
 
+  .read-searchbar{gap:8px}
+  .read-searchbar input{
+    flex:1;min-width:0;font-family:inherit;font-size:1rem;color:var(--ink);
+    padding:11px 13px;border-radius:10px;border:1.5px solid var(--line);background:#fff;min-height:44px;
+  }
+  .read-searchbar input:focus{outline:2px solid var(--brand);border-color:var(--brand)}
+  #read-search-clear{min-width:44px}
+  #read-search-info{font-size:.85rem;color:var(--brand-dark);font-weight:700;white-space:nowrap}
+  .read-item mark{background:#fff2a8;color:inherit;border-radius:3px;padding:0 1px;font-weight:700}
+  .read-choice.correct mark{background:#bff0d4}
+  .read-empty{padding:26px 14px;text-align:center;color:var(--muted);font-weight:600}
   .read-body{padding:16px 18px 26px}
   .read-item{
     font-size:calc(1rem*var(--rs));
@@ -931,6 +942,13 @@
     <div class="read-pagebar">
       <span class="pinfo">หมวด</span>
       <select id="read-cat" style="max-width:100%"></select>
+    </div>
+    <div class="read-pagebar read-searchbar">
+      <span class="pinfo">🔍</span>
+      <input id="read-search" type="search" inputmode="search" autocomplete="off"
+        placeholder="พิมพ์ค้นหา เช่น รย.3, ควันดำ, ห้ามล้อ">
+      <button id="read-search-clear" title="ล้าง">✕</button>
+      <span class="pinfo" id="read-search-info"></span>
     </div>
     <div class="read-pagebar">
       <button id="rp-prev">‹ ก่อนหน้า</button>
@@ -2099,11 +2117,25 @@ document.addEventListener("keydown", e=>{
 /* ============ READ ALL / ZOOM / PAGINATE / PRINT ============ */
 const THAI_LAB = ["ก","ข","ค","ง","จ","ฉ"];
 const READ_PER = 10;
-let rPage = 0, rZoom = 1, rCat = -1;
+let rPage = 0, rZoom = 1, rCat = -1, rQuery = "";
 let rList = BANK.map((_,i)=>i);            // ดัชนีข้อที่กำลังอ่าน (ตามหมวด)
 const rTotalPages = () => Math.max(1, Math.ceil(rList.length / READ_PER));
+function normText(t){
+  return String(t).toLowerCase()
+    .replace(/[\.\s\u200b]/g,"")     // ตัดจุด/ช่องว่าง เช่น "รย.3" = "รย3" = "ร ย 3"
+    .replace(/[่-๋็์]/g,"");           // ตัดวรรณยุกต์ไทย ให้ค้นง่ายขึ้น
+}
 function rebuildList(){
-  rList = (rCat===-1) ? BANK.map((_,i)=>i) : BANK.map((_,i)=>i).filter(i=> CAT[i]===rCat);
+  let base = (rCat===-1) ? BANK.map((_,i)=>i) : BANK.map((_,i)=>i).filter(i=> CAT[i]===rCat);
+  const q = normText(rQuery||"");
+  if(q){
+    base = base.filter(i=>{
+      const it = BANK[i];
+      const hay = normText(it.q + " " + it.c.join(" "));
+      return hay.includes(q);
+    });
+  }
+  rList = base;
 }
 
 function initReadCat(){
@@ -2113,7 +2145,8 @@ function initReadCat(){
   sel.innerHTML = html; sel.dataset.done="1";
   sel.addEventListener("change", e=>{ rCat = +e.target.value; rPage=0; rebuildList(); buildPageSelect(); renderReadPage(); });
 }
-function openRead(){ rPage = 0; rCat = -1; initReadCat(); $("read-cat").value="-1"; rebuildList(); applyZoom(); buildPageSelect(); renderReadPage(); show("read"); }
+function runReadSearch(){ rPage = 0; rebuildList(); buildPageSelect(); renderReadPage(); }
+function openRead(){ rPage = 0; rCat = -1; rQuery = ""; initReadCat(); $("read-cat").value="-1"; if($("read-search")) $("read-search").value=""; rebuildList(); applyZoom(); buildPageSelect(); renderReadPage(); show("read"); }
 
 function buildPageSelect(){
   const sel = $("rp-select"); if(!sel) return;
@@ -2132,15 +2165,15 @@ function renderReadPage(){
   rPage = Math.max(0, Math.min(rPage, tp-1));
   const start = rPage*READ_PER, end = Math.min(start+READ_PER, rList.length);
   let html = "";
-  if(rList.length===0){ html='<div class="read-item">ไม่มีข้อในหมวดนี้</div>'; }
+  if(rList.length===0){ html='<div class="read-empty">ไม่พบข้อที่ตรงกับ “'+escapeHtml(rQuery)+'”'+(rQuery?'':' ในหมวดนี้')+'</div>'; }
   for(let k=start;k<end;k++){
     const i = rList[k];
     const it = BANK[i];
-    html += '<div class="read-item"><div class="read-q"><span class="rq-no">ข้อ '+(i+1)+'.</span>'+escapeHtml(it.q)+'</div>';
+    html += '<div class="read-item"><div class="read-q"><span class="rq-no">ข้อ '+(i+1)+'.</span>'+hlText(it.q)+'</div>';
     if(it.img){ html += '<img class="read-img" src="'+it.img+'" alt="ภาพประกอบ">'; }
     it.c.forEach((c,ci)=>{
       const ok = ci===it.a;
-      html += '<div class="read-choice'+(ok?' correct':'')+'"><span class="rc-lab">'+THAI_LAB[ci]+'</span><span class="rc-txt">'+escapeHtml(c)+'</span></div>';
+      html += '<div class="read-choice'+(ok?' correct':'')+'"><span class="rc-lab">'+THAI_LAB[ci]+'</span><span class="rc-txt">'+hlText(c)+'</span></div>';
     });
     html += '<div class="read-ans-tag">✓ เฉลย: '+THAI_LAB[it.a]+'</div></div>';
   }
@@ -2149,6 +2182,7 @@ function renderReadPage(){
   $("rp-info").textContent = "/ "+tp;
   $("rp-info2").textContent = info;
   $("rp-select").value = rPage;
+  const si=$("read-search-info"); if(si) si.textContent = rQuery ? ("พบ "+rList.length+" ข้อ") : "";
   $("rp-prev").disabled = $("rp-prev2").disabled = (rPage===0);
   $("rp-next").disabled = $("rp-next2").disabled = (rPage>=tp-1);
   window.scrollTo({top:0,behavior:"smooth"});
@@ -2156,6 +2190,26 @@ function renderReadPage(){
 
 function escapeHtml(t){
   return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+// ไฮไลต์คำค้น โดยจับคู่แบบผ่อนปรน (ข้ามจุด/ช่องว่าง/วรรณยุกต์)
+function hlText(raw){
+  const safe = escapeHtml(raw);
+  const q = normText(rQuery||"");
+  if(!q) return safe;
+  const norm = normText(raw);
+  const startN = norm.indexOf(q);
+  if(startN<0) return safe;
+  // แปลงตำแหน่งจาก normalized กลับไปยัง raw
+  let ni=0, s0=-1, s1=-1;
+  for(let ri=0; ri<raw.length; ri++){
+    const nc = normText(raw[ri]);
+    if(nc.length===0) continue;          // อักขระที่ถูกตัด (จุด/ช่องว่าง/วรรณยุกต์)
+    if(ni===startN && s0<0) s0=ri;
+    ni += nc.length;
+    if(ni>=startN+q.length){ s1=ri+1; break; }
+  }
+  if(s0<0||s1<0) return safe;
+  return escapeHtml(raw.slice(0,s0))+"<mark>"+escapeHtml(raw.slice(s0,s1))+"</mark>"+escapeHtml(raw.slice(s1));
 }
 
 function applyZoom(){
@@ -2193,6 +2247,15 @@ $("rp-next").addEventListener("click", ()=>{ rPage++; renderReadPage(); });
 $("rp-prev2").addEventListener("click", ()=>{ rPage--; renderReadPage(); });
 $("rp-next2").addEventListener("click", ()=>{ rPage++; renderReadPage(); });
 $("rp-select").addEventListener("change", e=>{ rPage=+e.target.value; renderReadPage(); });
+let rSearchTimer=null;
+$("read-search").addEventListener("input", e=>{
+  rQuery = e.target.value.trim();
+  clearTimeout(rSearchTimer);
+  rSearchTimer = setTimeout(runReadSearch, 180);   // หน่วงเล็กน้อยให้พิมพ์ลื่น
+});
+$("read-search-clear").addEventListener("click", ()=>{
+  rQuery=""; $("read-search").value=""; $("read-search").focus(); runReadSearch();
+});
 
 /* ============ อ่านสรุปแนวข้อสอบ ============ */
 let smZoom = 1;
